@@ -1,1 +1,1 @@
-export * from './FilmForm.tsx';
+export * from './FrameForm.tsx';
