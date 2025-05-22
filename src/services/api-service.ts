@@ -20,7 +20,7 @@ export const apiService = createApi({
         updateFilm: builder.mutation({
             query: ({ id, ...patch }) => ({
                 url: `items/${id}`,
-                method: 'PATCH',
+                method: 'PUT',
                 body: patch,
             }),
         }),

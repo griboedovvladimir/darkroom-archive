@@ -1,5 +1,5 @@
 
-import { EditFilm } from "./pages/EditFilm.tsx";
+import { EditFilm } from "./pages/EditFilm/EditFilm.tsx";
 import { FilmsList } from "./pages/FilmsList.tsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 

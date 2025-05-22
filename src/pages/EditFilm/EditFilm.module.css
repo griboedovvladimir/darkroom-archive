@@ -1,0 +1,14 @@
+.addButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    div + div {
+        font-size: 50px;
+    }
+}
+
+.qrCode {
+margin: 10px 0;;
+}

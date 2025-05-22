@@ -1,7 +1,7 @@
 import { Button, Flex } from "antd";
 import { Link } from "react-router-dom";
 
-export const availableColumns = [
+export const availableColumns = (deleteCallback: (arg0: any) => void) => [
   {
     title: 'Code',
     dataIndex: 'code',
@@ -59,10 +59,11 @@ export const availableColumns = [
     title: '',
     key: 'action',
     dataIndex: 'action',
+    width: 100,
     render: (_, record: any) => (
       <Flex gap={10}>
-      <Link to={`/edit/${record._id}`}>Edit</Link>
-        <Button onClick={() => console.log(record)}>
+        <Button href={`/edit/${record._id}`}>Edit</Button>
+        <Button onClick={() => deleteCallback(record._id)} type="primary" danger>
           {"Delete"}
         </Button>
       </Flex>

@@ -3,13 +3,31 @@ import { Button, Flex, Form, Modal, Select, Table } from "antd";
 import { useEffect, useState } from "react";
 import { IFilm } from "../interfaces/IFilm.ts";
 import { formatFilmForm } from "../hooks/formatFilmForm.ts";
-import { availableColumns } from "./constants/availableColumns.tsx";
-import { useGetFilmsQuery, useAddFilmMutation } from "../services/api-service.ts";
+import { availableColumns as defaultColumns } from "./constants/availableColumns.tsx";
+import { useGetFilmsQuery, useAddFilmMutation, useDeleteFilmMutation } from "../services/api-service.ts";
 import dayjs from "dayjs";
 import { statusOptions } from "../constants/costants.ts";
 
 export const FilmsList = () => {
   const defaultSelectedColumns = ['status', 'type', 'filmStock'];
+  const [deleteFilm] = useDeleteFilmMutation();
+  const onHandleDelete = async (id: any) => {
+    Modal.confirm({
+      title: 'Confirm',
+      content: 'Are you sure you want to delete this film?',
+      onOk: async () => {
+        await deleteFilm(id).unwrap();
+        refetch();
+      },
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <OkBtn />
+        </>
+      ),
+    });
+  }
+  const availableColumns = defaultColumns(onHandleDelete);
   const [columns, setColumns] = useState(availableColumns.filter((column) => [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
   const [isFormOpened, setIsFormOpened] = useState(false);
   const [form] = Form.useForm();
@@ -18,7 +36,7 @@ export const FilmsList = () => {
     value: column.key,
     label: column.title,
   }));
-  const { data: fetchedFilms, isLoading } = useGetFilmsQuery({});
+  const { data: fetchedFilms, isLoading, refetch } = useGetFilmsQuery({});
   const [addFilm] = useAddFilmMutation();
   columnsOptions.shift();
   const onSelect = (selectedColumns: string | string[]) => {
@@ -27,11 +45,12 @@ export const FilmsList = () => {
   }
 
   const mapFilmFields = (film: IFilm) => {
+
     return {
       ...film,
-      loadedDate: film.loadedDate ? dayjs(film.loadedDate) : null,
-      developedDate: film.developedDate ? dayjs(film.developedDate) : null,
-      useBy: film.useBy ? dayjs(film.useBy) : null,
+      loadedDate: film.loadedDate ? dayjs(film.loadedDate).format('MM/YYYY') : null,
+      developedDate: film.developedDate ? dayjs(film.developedDate).format('MM/YYYY') : null,
+      useBy: film.useBy ? dayjs(film.useBy).format('MM/YYYY') : null,
       status: statusOptions.find((status) => status.value === film.status)?.label,
       code: `${film.code.toString().padStart(4, '0')}${film.type === 'instant' ? 'I': film.type}${film.color}${film.iso}`,
     };
@@ -77,7 +96,7 @@ export const FilmsList = () => {
         </Form.Item>
         <Button onClick={() => setIsFormOpened(true)} type="primary">Add film</Button>
       </Flex>
-      <Table dataSource={dataSource} columns={columns} loading={isLoading} rowKey="code"/>
+      <Table  style={{ maxWidth: 1000 }} dataSource={dataSource} columns={columns} loading={isLoading} rowKey="code"/>
     </div>
   );
 }

@@ -57,7 +57,7 @@ app.get('/items', async (req, res) => {
 
 // Обновление
 app.put('/items/:id', async (req, res) => {
-	const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
+	const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
 	res.json(updatedItem);
 });
 
