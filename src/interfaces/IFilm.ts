@@ -21,6 +21,7 @@ export interface IFilm {
   frames?: string[],
   createdAt?: string,
   updatedAt?: string,
+  fresh?: 'danger' | 'warning',
 }
 
 export interface IFrame {

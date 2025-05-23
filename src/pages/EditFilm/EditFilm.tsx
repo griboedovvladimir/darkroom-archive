@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Flex, Form, notification, QRCode } from "antd";
+import { Breadcrumb, Button, Flex, Form, notification, QRCode, Spin } from "antd";
 import { FilmForm } from "../components/FilmForm";
 import Title from "antd/es/typography/Title";
 import { useGetFilmsQuery, useUpdateFilmMutation } from "../../services/api-service";
@@ -71,7 +71,7 @@ export const EditFilm = () => {
         <style>
         @media print {
   @page {
-    margin: 0; /* убрать поля (если браузер позволит) */
+    margin: 0; 
   }
 
   body {
@@ -96,9 +96,12 @@ export const EditFilm = () => {
     printWindow?.document.close();
   };
 
+  const isFrames = film?.status !== 'unexposed' && film?.status !== 'exposed' && film?.status !== 'loaded';
+
 
   return (
     <div className="main">
+    {isLoading && <Spin size="large" fullscreen/>}
       <Breadcrumb items={[{ title: 'Film list', href: '/' }, { title: 'Edit film' }]} />
       <Flex align="top" gap={20}>
         <div className={styles.qrCode} ref={qrWrapperRef} onClick={handlePrint}>
@@ -114,6 +117,7 @@ export const EditFilm = () => {
       </Flex>
       {!isLoading && <FilmForm form={form} film={film} />}
       <Flex justify="flex-end"><Button type="primary" onClick={onSave}>Save changes</Button></Flex>
+      {isFrames && <div>
       <Title level={1}>Frames</Title>
       <Flex gap={10} wrap>
         {frames.map((frame, index) => (
@@ -128,6 +132,7 @@ export const EditFilm = () => {
         ))}
         <Button style={{ height: 100, width: 100, padding: 0 }} onClick={addFrame}><div className={styles.addButton}><div>Add Frame</div><div>+</div></div></Button>
       </Flex>
+      </div>}
     </div>
   );
 }

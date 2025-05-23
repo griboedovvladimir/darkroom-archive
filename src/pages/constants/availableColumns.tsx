@@ -1,5 +1,4 @@
 import { Button, Flex } from "antd";
-import { Link } from "react-router-dom";
 
 export const availableColumns = (deleteCallback: (arg0: any) => void) => [
   {
@@ -12,6 +11,11 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     dataIndex: 'status',
     key: 'status',
     sorter: (a: { status: number; }, b: { status: number; }) => a.status - b.status,
+  },
+  {
+    title: 'Use By',
+    dataIndex: 'useBy',
+    key: 'useBy',
   },
   {
     title: 'Loaded Date',
