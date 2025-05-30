@@ -35,7 +35,12 @@ export const FilmsList = () => {
     });
   }
 
-  const availableColumns = defaultColumns(onHandleDelete);
+  const availableColumns = defaultColumns(onHandleDelete).map((column) => ({
+    ...column,
+    sorter: column.sorter
+      ? (a: any, b: any) => column.sorter(a, b)
+      : undefined,
+  }));
   const [columns, setColumns] = useState(availableColumns.filter((column) => [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
   const [isFormOpened, setIsFormOpened] = useState(false);
   const [form] = Form.useForm();

@@ -75,6 +75,11 @@ export const filmStocks = [{ value: '1', label: 'Ilford Delta 100', iso: 100, co
 { value: '43', label: 'Fujifilm Instax Square', iso: 800, color: 'BW', process: 'instant' },
 { value: '44', label: 'Polaroid 600', iso: 800, color: 'C', process: 'instant' },
 { value: '45', label: 'Polaroid SX-70', iso: 100, color: 'C', process: 'instant' },
+{ value: '46', label: 'Agfa APX 100', iso: 100, color: 'BW', process: 'BW' },
+{ value: '47', label: 'Agfa APX 400', iso: 400, color: 'BW', process: 'BW' },
+{ value: '48', label: 'Fujifilm Reala 100', iso: 100, color: 'C', process: 'C41' },
+{ value: '49', label: 'Lomography Potsdam 100', iso: 100, color: 'BW', process: 'BW' },
+{ value: '50', label: 'Rollei Ortho 25', iso: 25, color: 'BW', process: 'BW' },
 ]
 
 export const statusOptions = [

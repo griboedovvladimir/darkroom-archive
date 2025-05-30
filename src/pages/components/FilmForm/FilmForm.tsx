@@ -39,11 +39,11 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
     id: ""
   }
 
-  const disabledDateAfter = (current) => {
+  const disabledDateAfter = (current: any) => {
     return current && current >= dayjs().endOf('day');
   };
 
-  const onFieldChange = (event) => {
+  const onFieldChange = () => {
 
   }
 

@@ -4,14 +4,26 @@ import Title from "antd/es/typography/Title";
 import { useGetFilmsQuery, useUpdateFilmMutation } from "../../services/api-service";
 import { useParams } from "react-router";
 import styles from './EditFilm.module.css';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { create } from 'zustand'
+
+interface StoreState {
+  frames: { id: number }[];
+  addFrame: () => void;
+}
+
+const useStore = create<StoreState>((set) => 
+  ({
+    frames: [], 
+    addFrame: () => set((state) => ({ frames: [...state.frames, { id: state.frames.length + 1 }] })),
+  }));
 
 export const EditFilm = () => {
-  const [frames, setFrames] = useState<{ [key: string]: any }[]>([]);
+  const { frames, addFrame } = useStore()
   const { data: fetchedFilms, isLoading } = useGetFilmsQuery({});
   const [update, { isSuccess, isError }] = useUpdateFilmMutation();
   const { id } = useParams();
-  const film = fetchedFilms?.find((film) => film._id === id);
+  const film = fetchedFilms?.find((film: { _id: string | undefined; }) => film._id === id);
   const [form] = Form.useForm();
   const onSave = async () => {
     update({
@@ -45,13 +57,14 @@ export const EditFilm = () => {
     }
   });
 
-  const addFrame = () => {
-    setFrames([...frames, { id: frames.length + 1 }]);
+  const setFrames = (newFrames: { id: number }[]) => {
+    useStore.setState({ frames: newFrames });
   }
+  
 
   const code = `${film?.code.toString().padStart(4, '0')}${film?.type === 'instant' ? 'I' : film?.type}${film?.color}${film?.iso}`;
 
-  const qrWrapperRef = useRef(null);
+  const qrWrapperRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
     const canvas = qrWrapperRef?.current?.querySelector('canvas') || qrWrapperRef?.current?.querySelector('img');
@@ -61,7 +74,7 @@ export const EditFilm = () => {
       return;
     }
 
-    const dataUrl = canvas.toDataURL ? canvas.toDataURL() : canvas.src;
+    const dataUrl = canvas instanceof HTMLCanvasElement ? canvas.toDataURL() : canvas?.src;
 
     const printWindow = window.open('', '_blank');
     printWindow?.document.open();
