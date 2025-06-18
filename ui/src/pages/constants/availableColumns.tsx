@@ -1,5 +1,5 @@
 import { Button, Flex } from "antd";
-import { getCameraOptions, statusOptions, typeOptions } from "../../constants/costants";
+import { statusOptions, typeOptions } from "../../constants/costants";
 
 export const availableColumns = (deleteCallback: (arg0: any) => void) => [
   {

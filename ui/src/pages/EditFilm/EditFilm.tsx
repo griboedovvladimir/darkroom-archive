@@ -4,13 +4,8 @@ import Title from "antd/es/typography/Title";
 import { useGetFilmsQuery, useUpdateFilmMutation } from "../../services/api-service";
 import { useParams } from "react-router";
 import styles from './EditFilm.module.css';
-import { useEffect, useRef } from "react";
+import { Key, useEffect, useRef } from "react";
 import { useHandlePrint } from "../hooks/useHandlePrint";
-
-interface StoreState {
-  frames: { id: number }[];
-  addFrame: () => void;
-}
 
 export const EditFilm = () => {
   const { data: fetchedFilms, isLoading, refetch } = useGetFilmsQuery({});
@@ -92,12 +87,12 @@ export const EditFilm = () => {
       {isFrames && <div>
         <Title level={1}>Frames</Title>
         <Flex gap={10} wrap>
-          {film?.frames.map((frame, index) => (
+          {film?.frames.map((frame: { id: any; }, index: Key | null | undefined) => (
             <div className={styles.frameCard} key={index}>
               <div>
                 <div>Frame {`${code}-${frame.id}`}</div>
               </div>
-              <Button type="primary" danger onClick={() => addFrame(index)}>X</Button>
+              <Button type="primary" danger onClick={() => addFrame(index as number)}>X</Button>
             </div>
           ))}
           <Button style={{ height: 100, width: 100, padding: 0 }} onClick={() => addFrame()}><div className={styles.addButton}><div>Add Frame</div><div>+</div></div></Button>

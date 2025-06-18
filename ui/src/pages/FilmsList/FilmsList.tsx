@@ -108,7 +108,7 @@ export const FilmsList = () => {
       <Table
         style={{ maxWidth: '80vw' }}
         dataSource={films}
-        columns={columns}
+        columns={columns as any}
         loading={isLoading}
         rowKey="code"
         rowClassName={(record: any) => {
