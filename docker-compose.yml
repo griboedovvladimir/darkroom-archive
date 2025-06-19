@@ -15,3 +15,15 @@ services:
       - backend
     networks:
       - dev
+
+  backend:
+    build:
+      context: ./backend
+    networks:
+      - dev
+
+  frontend:
+    build:
+      context: ./ui
+    networks:
+      - dev
