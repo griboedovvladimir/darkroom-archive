@@ -1,6 +1,7 @@
 export interface IFilm {
   code: any;
   id: string,
+  _id?: string,
   iso?: number,
   color?: string,
   process?: string,

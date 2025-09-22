@@ -1,4 +1,4 @@
-import { Button, Flex } from "antd";
+import { Button } from "antd";
 import { statusOptions, typeOptions } from "../../constants/costants";
 
 export const availableColumns = (deleteCallback: (arg0: any) => void) => [
@@ -11,12 +11,14 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    filters: statusOptions.map(({ value, label }) => ({
+    filters: statusOptions.map(({value, label}) => ({
       text: label,
       value,
     })),
     onFilter: (value: string, record: { status: string }) => record.status.toLowerCase() === value,
-    sorter: (a: { status: number; }, b: { status: number; }) => a.status !== b.status ? a.status < b.status ? -1 : 1 : 0,
+    sorter: (a: { status: number; }, b: {
+      status: number;
+    }) => a.status !== b.status ? a.status < b.status ? -1 : 1 : 0,
   },
   {
     title: 'Use By',
@@ -39,7 +41,7 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     dataIndex: 'type',
     key: 'type',
     onFilter: (value: string, record: { type: string | string[]; }) => record.type.includes(value as string),
-    filters: typeOptions.map(({value, label})=> ({
+    filters: typeOptions.map(({value, label}) => ({
       text: label,
       value,
     })),
@@ -49,7 +51,9 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     title: 'Film Stock',
     dataIndex: 'filmStock',
     key: 'filmStock',
-    sorter: (a: { filmStock: number; }, b: { filmStock: number; }) => a.filmStock !== b.filmStock ? a.filmStock < b.filmStock ? -1 : 1 : 0,
+    sorter: (a: { filmStock: number; }, b: {
+      filmStock: number;
+    }) => a.filmStock !== b.filmStock ? a.filmStock < b.filmStock ? -1 : 1 : 0,
   },
   {
     title: 'Camera',
@@ -77,12 +81,9 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     dataIndex: 'action',
     width: 100,
     render: (_: any, record: any) => (
-      <Flex gap={10}>
-        <Button href={`/edit/${record._id}`}>Edit</Button>
-        <Button onClick={() => deleteCallback(record._id)} type="primary" danger>
-          {"Delete"}
-        </Button>
-      </Flex>
+      <Button onClick={() => deleteCallback(record._id)} type="primary" danger>
+        {"Delete"}
+      </Button>
     ),
   },
 ]

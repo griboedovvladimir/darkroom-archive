@@ -1,7 +1,7 @@
-import { DatePicker, Flex, Form, Input, Select, TimePicker } from "antd";
+import { DatePicker, Flex, Form, Input, Select, TimePicker } from 'antd';
 import styles from './FilmForm.module.css';
-import { useEffect, useState } from "react";
-import { FormInstance } from "antd/es/form/hooks/useForm";
+import { useEffect, useState } from 'react';
+import { FormInstance } from 'antd/es/form/hooks/useForm';
 import {
   developerOptions,
   filmStockOptions,
@@ -9,11 +9,11 @@ import {
   formatOptions, formStates,
   getCameraOptions,
   scannerOptions, statusOptions, typeOptions
-} from "../../../constants/costants.ts";
-import { IFilm } from "../../../interfaces/IFilm.ts";
+} from '../../../constants/costants.ts';
+import { IFilm } from '../../../interfaces/IFilm.ts';
 import dayjs from 'dayjs';
 
-type FilmType = "135" | "120" | "sheet" | 'instant'| string;
+type FilmType = '135' | '120' | 'sheet' | 'instant' | string;
 
 
 export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => {
@@ -36,7 +36,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
     notes: '',
     frames: [],
     code: undefined,
-    id: ""
+    id: ''
   }
 
   const disabledDateAfter = (current: any) => {
@@ -55,12 +55,17 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
   }
 
   const onFormChange = (event: {
-    type(type: any): unknown; status: string 
-}) => {
+    type(type: any): unknown; status: string
+  }) => {
     event?.status && setFormState(formStates[event?.status]);
   }
   useEffect(() => {
-    const formData = film ? {...film, useBy: dayjs(film.useBy), loadedDate: dayjs(film.loadedDate), developedDate: dayjs(film.developedDate)} : defaultValues;
+    const formData = film ? {
+      ...film,
+      useBy: dayjs(film.useBy),
+      loadedDate: dayjs(film.loadedDate),
+      developedDate: dayjs(film.developedDate)
+    } : defaultValues;
 
     setFormState(formStates[film?.status || 'unexposed']);
     form.setFieldsValue(formData);
@@ -78,9 +83,9 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
           />
         </Form.Item>
 
-        {formState.includes('usedBy') &&  <Form.Item name="useBy" label="Use By" rules={[{required: true}]}>
-          <DatePicker onChange={onFieldChange}/>
-        </Form.Item>}
+        {formState.includes('usedBy') && <Form.Item name="useBy" label="Use By" rules={[{required: true}]}>
+					<DatePicker onChange={onFieldChange}/>
+				</Form.Item>}
 
         <Form.Item name="type" label="Type" rules={[{required: true}]}>
           <Select

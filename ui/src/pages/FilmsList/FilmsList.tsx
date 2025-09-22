@@ -1,40 +1,28 @@
-import { FilmForm } from "../components/FilmForm/index.ts";
-import { Button, Flex, Form, Modal, Select, Table } from "antd";
-import { useEffect, useState } from "react";
-import { IFilm } from "../../interfaces/IFilm.ts";
-import { formatFilmForm } from "../../hooks/formatFilmForm.ts";
-import { availableColumns as defaultColumns } from "../constants/availableColumns.tsx";
-import { useGetFilmsQuery, useAddFilmMutation, useDeleteFilmMutation } from "../../services/api-service.ts";
-import dayjs from "dayjs";
-import { statusOptions } from "../../constants/costants.ts";
-import { FilmStatus } from "../../constants/fiimStatus.ts";
-import { useHandleDelete } from "../hooks/useHandleDelete.tsx";
-
-enum FilmFresh {
-  Danger = 'danger',
-  Warning = 'warning',
-}
-
-const isFresh = (film: IFilm) => {
-  if (film.status === FilmStatus.Unexposed || film.status === FilmStatus.Exposed || film.status === FilmStatus.Loaded) {
-    return dayjs(film.useBy).isBefore(dayjs())
-      ? FilmFresh.Danger
-      : dayjs(film.useBy).isBefore(dayjs().add(3, 'month'))
-        ? FilmFresh.Warning
-        : undefined;
-  }
-  return undefined;
-};
+import { FilmForm } from '../components/FilmForm';
+import { Button, Flex, Form, Modal, Select, Table } from 'antd';
+import { useEffect, useState } from 'react';
+import { IFilm } from '../../interfaces/IFilm.ts';
+import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
+import { availableColumns as defaultColumns } from '../constants/availableColumns.tsx';
+import { useGetFilmsQuery, useAddFilmMutation, useDeleteFilmMutation } from '../../services/api-service.ts';
+import { useHandleDelete } from '../hooks/useHandleDelete.tsx';
+import { useNavigate } from 'react-router-dom';
+import { FilmFresh } from '../../enums/FilmFresh.tsx';
+import { mapFilmFields } from '../../helpers/list.helper.ts';
+import styles from './FilmsList.module.css';
+import { getAllCameraOptions, statusOptions } from '../../constants/costants.ts';
 
 export const FilmsList = () => {
-  const { data: fetchedFilms, isLoading, refetch } = useGetFilmsQuery({});
+  const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
   const [deleteFilm] = useDeleteFilmMutation();
   const [addFilm] = useAddFilmMutation();
 
   const [isFormOpened, setIsFormOpened] = useState(false);
   const [form] = Form.useForm();
-  const [films, setFilms] = useState<any[]>([]);
-  
+  const [films, setFilms] = useState<IFilm[]>([]);
+  const [pageSize, setPageSize] = useState(10);
+  const navigate = useNavigate();
+
   const onHandleDelete = (id: string) => useHandleDelete(id, deleteFilm, refetch);
 
   const availableColumns = defaultColumns(onHandleDelete).map((column) => ({
@@ -45,32 +33,34 @@ export const FilmsList = () => {
   }));
   const defaultSelectedColumns = ['status', 'type', 'filmStock'];
   const [columns, setColumns] = useState(availableColumns.filter((column) => [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
-  const columnsOptions = [...availableColumns].filter(({ key }) => key !== 'action').map((column) => ({
+  const columnsOptions = [...availableColumns].filter(({key}) => key !== 'action').map((column) => ({
     value: column.key,
     label: column.title,
   }));
   columnsOptions.shift();
 
-  const formatDate = (date: string) => date ? dayjs(date).format('MM/YYYY') : null;
 
-   useEffect(() => {
+  useEffect(() => {
     if (fetchedFilms) {
-      const formattedFilms = fetchedFilms.map((film: any) => mapFilmFields(film));
+      const formattedFilms = fetchedFilms.map((film: IFilm) => mapFilmFields(film));
       setFilms(formattedFilms.reverse());
     }
   }, [fetchedFilms]);
 
-  const mapFilmFields = (film: IFilm) => {
-    return {
-      ...film,
-      loadedDate: formatDate(film.loadedDate),
-      developedDate: formatDate(film.developedDate),
-      useBy: formatDate(film.useBy),
-      status: statusOptions.find((status) => status.value === film.status)?.label,
-      code: `${film.code.toString().padStart(4, '0')}${film.type === 'instant' ? 'I' : film.type}${film.color}${film.iso}`,
-      fresh: isFresh(film),
-      frameCount: film.frames?.length,
-    };
+  const onFilter = (value: string, column: string) => {
+    if (value) {
+      const filteredFilms = fetchedFilms?.filter((film: IFilm) => film[column as keyof IFilm] === value);
+      if (filteredFilms) {
+        const formattedFilms = filteredFilms.map((film: IFilm) => mapFilmFields(film));
+        setFilms(formattedFilms.reverse());
+      }
+    } else {
+      if (fetchedFilms) {
+        const formattedFilms = fetchedFilms.map((film: IFilm) => mapFilmFields(film));
+        setFilms(formattedFilms.reverse());
+      }
+    }
+
   }
 
   const onSelect = (selectedColumns: string | string[]) => {
@@ -92,26 +82,50 @@ export const FilmsList = () => {
   return (
     <div className="main">
       {isFormOpened && <Modal
-        footer={modalFooterButtons}
-        open={isFormOpened}
-        onCancel={() => setIsFormOpened(false)}
-      >
-        <FilmForm form={form} />
-      </Modal>}
-      <Flex className="topControls" flex={1} justify={"space-between"}>
+				footer={modalFooterButtons}
+				open={isFormOpened}
+				onCancel={() => setIsFormOpened(false)}
+			>
+				<FilmForm form={form}/>
+			</Modal>}
+      <Flex className="topControls" flex={1} justify={'space-between'}>
         <Form.Item label="Show columns">
-          <Select style={{ minWidth: '300px' }} mode="tags" options={columnsOptions} defaultValue={defaultSelectedColumns}
-            onChange={onSelect} />
+          <Select className={styles.columnSelector} mode="tags" options={columnsOptions} defaultValue={defaultSelectedColumns}
+                  onChange={onSelect}/>
+        </Form.Item>
+        <h3>Filters</h3>
+        <Form.Item label="Status">
+          <Select className={styles.columnSelector} options={statusOptions} allowClear
+                  onChange={value => onFilter(value, 'status')}/>
+        </Form.Item>
+        <Form.Item label="Camera Type">
+          <Select className={styles.columnSelector} options={getAllCameraOptions()} allowClear
+                  onChange={value => onFilter(value, 'camera')}/>
         </Form.Item>
         <Button onClick={() => setIsFormOpened(true)} type="primary">Add film</Button>
       </Flex>
       <Table
-        style={{ maxWidth: '80vw' }}
+        className={styles.table}
         dataSource={films}
         columns={columns as any}
         loading={isLoading}
         rowKey="code"
-        rowClassName={(record: any) => {
+        pagination={{
+          pageSize,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50'],
+          onShowSizeChange: (_current, size) => {
+            setPageSize(size);
+          },
+        }}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              navigate(`/edit/${record._id}`);
+            },
+          };
+        }}
+        rowClassName={(record: IFilm) => {
           if (record.fresh === FilmFresh.Danger) return 'row-error';
           if (record.fresh === FilmFresh.Warning) return 'row-warning';
           return '';
