@@ -1,4 +1,4 @@
-export const useHandlePrint = (qrWrapperRef: any) => {
+export const useHandlePrint = (qrWrapperRef: any, code: string) => {
     const canvas = qrWrapperRef?.current?.querySelector('canvas') || qrWrapperRef?.current?.querySelector('img');
 
     if (!canvas) {
@@ -29,6 +29,7 @@ export const useHandlePrint = (qrWrapperRef: any) => {
 }</style>
         <body style="margin:0; padding:0;">
           <img src="${dataUrl}" style="width:100px;">
+          <div style="font-size:14px;">${code}</div>
           <script>
             window.onload = function() {
               window.print();

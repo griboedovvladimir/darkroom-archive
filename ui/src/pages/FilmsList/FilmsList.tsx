@@ -4,17 +4,14 @@ import { useEffect, useState } from 'react';
 import { IFilm } from '../../interfaces/IFilm.ts';
 import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
 import { availableColumns as defaultColumns } from '../constants/availableColumns.tsx';
-import { useGetFilmsQuery, useAddFilmMutation, useDeleteFilmMutation } from '../../services/api-service.ts';
-import { useHandleDelete } from '../hooks/useHandleDelete.tsx';
+import { useGetFilmsQuery, useAddFilmMutation } from '../../services/api-service.ts';
 import { useNavigate } from 'react-router-dom';
 import { FilmFresh } from '../../enums/FilmFresh.tsx';
 import { mapFilmFields } from '../../helpers/list.helper.ts';
 import styles from './FilmsList.module.css';
-import { getAllCameraOptions, statusOptions } from '../../constants/costants.ts';
 
 export const FilmsList = () => {
   const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
-  const [deleteFilm] = useDeleteFilmMutation();
   const [addFilm] = useAddFilmMutation();
 
   const [isFormOpened, setIsFormOpened] = useState(false);
@@ -23,9 +20,7 @@ export const FilmsList = () => {
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
 
-  const onHandleDelete = (id: string) => useHandleDelete(id, deleteFilm, refetch);
-
-  const availableColumns = defaultColumns(onHandleDelete).map((column) => ({
+  const availableColumns = defaultColumns().map((column) => ({
     ...column,
     sorter: column.sorter
       ? (a: any, b: any) => column.sorter(a, b)
@@ -46,22 +41,6 @@ export const FilmsList = () => {
       setFilms(formattedFilms.reverse());
     }
   }, [fetchedFilms]);
-
-  const onFilter = (value: string, column: string) => {
-    if (value) {
-      const filteredFilms = fetchedFilms?.filter((film: IFilm) => film[column as keyof IFilm] === value);
-      if (filteredFilms) {
-        const formattedFilms = filteredFilms.map((film: IFilm) => mapFilmFields(film));
-        setFilms(formattedFilms.reverse());
-      }
-    } else {
-      if (fetchedFilms) {
-        const formattedFilms = fetchedFilms.map((film: IFilm) => mapFilmFields(film));
-        setFilms(formattedFilms.reverse());
-      }
-    }
-
-  }
 
   const onSelect = (selectedColumns: string | string[]) => {
     const newColumns = availableColumns.filter((column) => selectedColumns.includes(column.key));
@@ -90,17 +69,9 @@ export const FilmsList = () => {
 			</Modal>}
       <Flex className="topControls" flex={1} justify={'space-between'}>
         <Form.Item label="Show columns">
-          <Select className={styles.columnSelector} mode="tags" options={columnsOptions} defaultValue={defaultSelectedColumns}
+          <Select className={styles.columnSelector} mode="tags" options={columnsOptions}
+                  defaultValue={defaultSelectedColumns}
                   onChange={onSelect}/>
-        </Form.Item>
-        <h3>Filters</h3>
-        <Form.Item label="Status">
-          <Select className={styles.columnSelector} options={statusOptions} allowClear
-                  onChange={value => onFilter(value, 'status')}/>
-        </Form.Item>
-        <Form.Item label="Camera Type">
-          <Select className={styles.columnSelector} options={getAllCameraOptions()} allowClear
-                  onChange={value => onFilter(value, 'camera')}/>
         </Form.Item>
         <Button onClick={() => setIsFormOpened(true)} type="primary">Add film</Button>
       </Flex>

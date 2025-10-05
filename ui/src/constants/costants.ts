@@ -143,7 +143,7 @@ type FilmType = keyof typeof Formats;
 
 export const getAllCameraOptions = () => {
   const allCameras = Object.values(Cameras).flat();
-  return allCameras.map((camera) => ({value: camera.value, label: camera.label}));
+  return allCameras.map((camera, idx) => ({value: idx + 1, label: camera.label}));
 }
 
 export const getCameraOptions = (filmType: FilmType) => Cameras[filmType].map((camera) => (

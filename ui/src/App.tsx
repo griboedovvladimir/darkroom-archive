@@ -1,22 +1,42 @@
-import { EditFilm } from "./pages/EditFilm/EditFilm.tsx";
-import { FilmsList } from "./pages/FilmsList/FilmsList.tsx";
+import { EditFilm } from './pages/EditFilm/EditFilm.tsx';
+import { FilmsList } from './pages/FilmsList/FilmsList.tsx';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import film  from './assets/film.svg';
-import { Button } from "antd";
+import film from './assets/film.svg';
+import { Button, ConfigProvider } from 'antd';
 
 function App() {
   return (
     <>
-      <Button href={`/`} style={{width: '80px', height: '80px', backgroundColor: 'red', borderRadius: '50%', margin: '20px auto', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <img src={film} alt="icon" width={55} />
+      <ConfigProvider theme={{
+        token: {
+          // Seed Token
+          colorPrimary: '#3b3b3b',
+          borderRadius: 2,
+
+          // Alias Token
+          colorBgContainer: '#ffffff',
+        },
+      }}>
+        <Button href={`/`} style={{
+          width: '80px',
+          height: '80px',
+          backgroundColor: 'red',
+          borderRadius: '50%',
+          margin: '20px auto',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <img src={film} alt="icon" width={55}/>
         </Button>
-      <Router>
-        <Routes>
-          <Route path="/" element={<FilmsList />} />
-          <Route path="/edit/:id" element={<EditFilm />} />
-        </Routes>
-      </Router>
-      </>
+        <Router>
+          <Routes>
+            <Route path="/" element={<FilmsList/>}/>
+            <Route path="/edit/:id" element={<EditFilm/>}/>
+          </Routes>
+        </Router>
+      </ConfigProvider>
+    </>
   )
 }
 

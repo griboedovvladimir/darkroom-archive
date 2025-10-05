@@ -1,6 +1,6 @@
 import { DatePicker, Flex, Form, Input, Select, TimePicker } from 'antd';
 import styles from './FilmForm.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormInstance } from 'antd/es/form/hooks/useForm';
 import {
   developerOptions,
@@ -18,7 +18,7 @@ type FilmType = '135' | '120' | 'sheet' | 'instant' | string;
 
 export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => {
   const [formState, setFormState] = useState(formStates['scanned']);
-  const [currentFIlmType, setCurrentFIlmType] = useState<FilmType>('120');
+  const [currentFilmType, setCurrentFilmType] = useState<FilmType>('120');
   const defaultValues: IFilm = {
     status: 'unexposed',
     useBy: '',
@@ -39,7 +39,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
     id: ''
   }
 
-  const disabledDateAfter = (current: any) => {
+  const disabledDateAfter = (current: unknown) => {
     return current && current >= dayjs().endOf('day');
   };
 
@@ -48,7 +48,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
   }
 
   const onFormatChange = (type: unknown) => {
-    setCurrentFIlmType(type as unknown as FilmType);
+    setCurrentFilmType(type as unknown as FilmType);
     form.setFieldValue('format', formatOptions(type as unknown as FilmType)[0].value);
     form.setFieldValue('camera', getCameraOptions(type as unknown as FilmType)[0].value);
     form.setFieldValue('filmStock', (type as unknown as FilmType) === 'instant' ? filmStocks.filter(film => film.process === 'instant')[0].value : filmStockOptions[0].value);
@@ -59,6 +59,10 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
   }) => {
     event?.status && setFormState(formStates[event?.status]);
   }
+
+  const statusOptionsByType = form.getFieldValue('type') === 'instant' ? statusOptions.slice(0, 3) : statusOptions;
+
+
   useEffect(() => {
     const formData = film ? {
       ...film,
@@ -69,7 +73,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
 
     setFormState(formStates[film?.status || 'unexposed']);
     form.setFieldsValue(formData);
-    setCurrentFIlmType(film?.type || '120');
+    setCurrentFilmType(film?.type || '120');
   }, [form])
 
   return (
@@ -79,7 +83,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
           <Select
             placeholder="Select a option and change input text above"
             onChange={onFieldChange}
-            options={statusOptions}
+            options={statusOptionsByType}
           />
         </Form.Item>
 
@@ -99,7 +103,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
 					<Select
 						placeholder="Select a option and change input text above"
 						onChange={onFieldChange}
-						options={formatOptions(currentFIlmType)}
+						options={formatOptions(currentFilmType)}
 					/>
 				</Form.Item>}
 
@@ -107,7 +111,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
           <Select
             placeholder="Select a option and change input text above"
             onChange={onFieldChange}
-            options={currentFIlmType === 'instant' ? filmStocks.filter(film => film.process === 'instant') : filmStockOptions}
+            options={currentFilmType === 'instant' ? filmStocks.filter(film => film.process === 'instant') : filmStockOptions}
           />
         </Form.Item>
 
@@ -115,7 +119,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
 					<Select
 						placeholder="Select a option and change input text above"
 						onChange={onFieldChange}
-						options={getCameraOptions(currentFIlmType)}
+						options={getCameraOptions(currentFilmType)}
 					/>
 				</Form.Item>}
 

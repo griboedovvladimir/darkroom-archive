@@ -1,7 +1,6 @@
-import { Button } from "antd";
-import { statusOptions, typeOptions } from "../../constants/costants";
+import { getAllCameraOptions, statusOptions, typeOptions } from '../../constants/costants';
 
-export const availableColumns = (deleteCallback: (arg0: any) => void) => [
+export const availableColumns = () => [
   {
     title: 'Code',
     dataIndex: 'code',
@@ -59,6 +58,13 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     title: 'Camera',
     dataIndex: 'camera',
     key: 'camera',
+    filters: getAllCameraOptions().map(({value, label}) => ({
+      text: label,
+      value,
+    })),
+    onFilter: (value: string, record: {
+      camera: string
+    }) => record.camera === getAllCameraOptions().find(option => option.value === Number(value))?.label
   },
   {
     title: 'Location',
@@ -74,16 +80,5 @@ export const availableColumns = (deleteCallback: (arg0: any) => void) => [
     title: 'Notes',
     dataIndex: 'notes',
     key: 'notes',
-  },
-  {
-    title: '',
-    key: 'action',
-    dataIndex: 'action',
-    width: 100,
-    render: (_: any, record: any) => (
-      <Button onClick={() => deleteCallback(record._id)} type="primary" danger>
-        {"Delete"}
-      </Button>
-    ),
-  },
+  }
 ]
