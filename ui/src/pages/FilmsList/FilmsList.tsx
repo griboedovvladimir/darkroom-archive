@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FilmFresh } from '../../enums/FilmFresh.tsx';
 import { mapFilmFields } from '../../helpers/list.helper.ts';
 import styles from './FilmsList.module.css';
+import { ColumnsType } from 'antd/es/table';
 
 export const FilmsList = () => {
   const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
@@ -86,7 +87,7 @@ export const FilmsList = () => {
       <Table
         className={styles.table}
         dataSource={films}
-        columns={columns as any}
+        columns={columns as ColumnsType<IFilm>}
         loading={isLoading}
         rowKey="code"
         pagination={{
