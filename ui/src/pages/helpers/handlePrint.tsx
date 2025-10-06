@@ -1,4 +1,4 @@
-export const useHandlePrint = (qrWrapperRef: any, code: string) => {
+export const handlePrint = (qrWrapperRef: any, code: string) => {
     const canvas = qrWrapperRef?.current?.querySelector('canvas') || qrWrapperRef?.current?.querySelector('img');
 
     if (!canvas) {

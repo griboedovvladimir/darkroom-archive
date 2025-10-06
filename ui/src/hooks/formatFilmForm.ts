@@ -1,5 +1,5 @@
 import { IFilm } from "../interfaces/IFilm.ts";
-import { Cameras, developerOptions, filmStocks } from "../constants/costants.ts";
+import { cameras, developerOptions, filmStocks } from "../constants/costants.ts";
 
 export const formatFilmForm = (filmForm: any): IFilm => {
   const filmStock = filmStocks?.find((filmStock) => filmStock.value === filmForm.filmStock);
@@ -9,7 +9,7 @@ export const formatFilmForm = (filmForm: any): IFilm => {
     useBy: filmForm.useBy?.format(),
     loadedDate: filmForm.loadedDate?.format(),
     developedDate: filmForm.developedDate?.format(),
-    camera: Cameras[filmForm.type]?.find((camera) => camera.value === filmForm.camera)?.label,
+    camera: cameras[filmForm.type]?.find((camera) => camera.value === filmForm.camera)?.label,
     developer: developerOptions?.find((developer) => developer.value === filmForm.developer)?.label,
     filmStock: filmStock?.label,
     iso: filmStock?.iso,

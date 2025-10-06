@@ -20,15 +20,21 @@ export const FilmsList = () => {
   const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
 
-  const availableColumns = defaultColumns().map((column) => ({
+  const availableColumns = defaultColumns()
+    .map((column) => ({
     ...column,
     sorter: column.sorter
       ? (a: any, b: any) => column.sorter(a, b)
       : undefined,
   }));
-  const defaultSelectedColumns = ['status', 'type', 'filmStock'];
-  const [columns, setColumns] = useState(availableColumns.filter((column) => [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
-  const columnsOptions = [...availableColumns].filter(({key}) => key !== 'action').map((column) => ({
+  const defaultSelectedColumns = ['status', 'type', 'filmStock', 'camera'];
+  const [columns, setColumns] = useState(
+    availableColumns.filter((column) =>
+      [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
+  const columnsOptions =
+    [...availableColumns]
+      .filter(({key}) => key !== 'action')
+      .map((column) => ({
     value: column.key,
     label: column.title,
   }));
@@ -37,13 +43,13 @@ export const FilmsList = () => {
 
   useEffect(() => {
     if (fetchedFilms) {
-      const formattedFilms = fetchedFilms.map((film: IFilm) => mapFilmFields(film));
-      setFilms(formattedFilms.reverse());
+      setFilms(fetchedFilms.map((film: IFilm) => mapFilmFields(film)).reverse());
     }
   }, [fetchedFilms]);
 
   const onSelect = (selectedColumns: string | string[]) => {
-    const newColumns = availableColumns.filter((column) => selectedColumns.includes(column.key));
+    const newColumns =
+      availableColumns.filter((column) => selectedColumns.includes(column.key));
     setColumns([availableColumns[0], ...newColumns, availableColumns[availableColumns.length - 1]]);
   }
 
@@ -54,9 +60,7 @@ export const FilmsList = () => {
     setIsFormOpened(false);
   }
 
-  const modalFooterButtons = [
-    <Button key={'key'} type="primary" onClick={onSave}>Save</Button>
-  ];
+  const modalFooterButtons = [<Button key={'key'} type="primary" onClick={onSave}>Save</Button>];
 
   return (
     <div className="main">
@@ -69,9 +73,13 @@ export const FilmsList = () => {
 			</Modal>}
       <Flex className="topControls" flex={1} justify={'space-between'}>
         <Form.Item label="Show columns">
-          <Select className={styles.columnSelector} mode="tags" options={columnsOptions}
-                  defaultValue={defaultSelectedColumns}
-                  onChange={onSelect}/>
+          <Select
+            className={styles.columnSelector}
+            mode="tags"
+            options={columnsOptions}
+            defaultValue={defaultSelectedColumns}
+            onChange={onSelect}
+          />
         </Form.Item>
         <Button onClick={() => setIsFormOpened(true)} type="primary">Add film</Button>
       </Flex>
@@ -89,13 +97,7 @@ export const FilmsList = () => {
             setPageSize(size);
           },
         }}
-        onRow={(record) => {
-          return {
-            onClick: () => {
-              navigate(`/edit/${record._id}`);
-            },
-          };
-        }}
+        onRow={(record) => ({onClick: () => navigate(`/edit/${record._id}`)})}
         rowClassName={(record: IFilm) => {
           if (record.fresh === FilmFresh.Danger) return 'row-error';
           if (record.fresh === FilmFresh.Warning) return 'row-warning';

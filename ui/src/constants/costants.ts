@@ -1,4 +1,4 @@
-export const Cameras: Record<string, { value: string, label: string, format: string }[]> = {
+export const cameras: Record<string, { value: string, label: string, format: string }[]> = {
   '120': [
     {value: '1', label: 'Hasselblad 500CM', format: '6x6'},
     {value: '2', label: 'Rolleiflex 2.8C', format: '6x6'},
@@ -109,23 +109,23 @@ export const scannerOptions = [
 ];
 
 export const shooterSpeedOptions = [
-  {label: "1", value: '10"'},
-  {label: "2", value: '5"'},
-  {label: "3", value: '2"'},
-  {label: "4", value: '1"'},
-  {label: "5", value: '1/2'},
-  {label: "6", value: '1/4'},
-  {label: "7", value: '1/8'},
-  {label: "8", value: '1/15'},
-  {label: "9", value: '1/30'},
-  {label: "10", value: '1/60'},
-  {label: "11", value: '1/128'},
-  {label: "12", value: '1/250'},
-  {label: "13", value: '1/500'},
-  {label: "14", value: '1/1000'},
-  {label: "15", value: '1/2000'},
-  {label: "16", value: '1/4000'},
-  {label: "17", value: '1/8000'},
+  {label: '1', value: '10"'},
+  {label: '2', value: '5"'},
+  {label: '3', value: '2"'},
+  {label: '4', value: '1"'},
+  {label: '5', value: '1/2'},
+  {label: '6', value: '1/4'},
+  {label: '7', value: '1/8'},
+  {label: '8', value: '1/15'},
+  {label: '9', value: '1/30'},
+  {label: '10', value: '1/60'},
+  {label: '11', value: '1/128'},
+  {label: '12', value: '1/250'},
+  {label: '13', value: '1/500'},
+  {label: '14', value: '1/1000'},
+  {label: '15', value: '1/2000'},
+  {label: '16', value: '1/4000'},
+  {label: '17', value: '1/8000'},
 ];
 
 export const filmStockOptions = filmStocks.map((stock) => (
@@ -139,25 +139,25 @@ export const formStates: Record<string, string[]> = {
   scanned: ['camera', 'format', 'loadedDate', 'developedDate', 'developer', 'developerTime', 'pullPush', 'location', 'scanner'],
 }
 
-type FilmType = keyof typeof Formats;
+export type FilmType = keyof typeof Formats;
 
 export const getAllCameraOptions = () => {
-  const allCameras = Object.values(Cameras).flat();
+  const allCameras = Object.values(cameras).flat();
   return allCameras.map((camera, idx) => ({value: idx + 1, label: camera.label}));
 }
 
-export const getCameraOptions = (filmType: FilmType) => Cameras[filmType].map((camera) => (
+export const getCameraOptions = (filmType: FilmType) => cameras[filmType].map((camera) => (
   {value: camera.value, label: camera.label}));
 
 export const formatOptions = (filmType: FilmType) => Formats[filmType].map((format) => (
   {value: format, label: format}));
 
-export const Formats = Object.keys(Cameras).reduce((acc, type) => {
-  acc[type] = Cameras[type].map((camera) => camera.format).filter((format, index, self) => self.indexOf(format) === index);
+export const Formats = Object.keys(cameras).reduce((acc, type) => {
+  acc[type] = cameras[type].map((camera) => camera.format).filter((format, index, self) => self.indexOf(format) === index);
   return acc;
 }, {} as Record<string, string[]>);
 
-export const typeOptions = Object.keys(Cameras).map((type) => (
+export const typeOptions = Object.keys(cameras).map((type) => (
   {value: type, label: type}
 ));
 

@@ -3,18 +3,22 @@ import { Button, Flex } from 'antd';
 import styles from './Frames.module.css';
 import { CloseOutlined } from '@ant-design/icons';
 
-export const Frames = ({film, update, refetch}: { code: string, film: any, update: any, refetch: any }) => {
+type Props = { code: string, film: any, update: any, refetch: VoidFunction }
+
+export const Frames = ({film, update, refetch}: Props ) => {
   const addFrame = async (frameNumber?: number) => {
     await update({
       id: film._id,
       data: {
         ...film,
-        frames: frameNumber ? film.frames.filter((_: any, i: number) => i !== frameNumber) : [...(film.frames || []), {id: (film.frames?.length || 0) + 1}],
+        frames: frameNumber ? film.frames.filter((_: unknown, i: number) => i !== frameNumber) : [...(film.frames || []), {id: (film.frames?.length || 0) + 1}],
       }
     });
 
     refetch();
   }
+
+  const onEditFrame = (id: string) => {};
 
   const isFrames = film?.status !== 'unexposed' && film?.status !== 'exposed' && film?.status !== 'loaded';
 
@@ -24,7 +28,7 @@ export const Frames = ({film, update, refetch}: { code: string, film: any, updat
 				<Title level={1}>Frames</Title>
 				<Flex gap={10} wrap>
           {film?.frames.map((frame: { id: string; }, index: number) => (
-            <Button className={styles.addCard} onClick={() => {}}>
+            <Button className={styles.addCard} onClick={() => onEditFrame(frame.id)}>
               <Flex className={styles.frameCard} vertical key={index} justify={'space-between'}>
                 <Flex justify={'end'}>
                   <CloseOutlined onClick={() => addFrame(index)} />

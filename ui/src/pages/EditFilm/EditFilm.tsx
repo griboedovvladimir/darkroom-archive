@@ -5,24 +5,33 @@ import { useDeleteFilmMutation, useGetFilmsQuery, useUpdateFilmMutation } from '
 import { useParams } from 'react-router';
 import styles from './EditFilm.module.css';
 import { useEffect, useRef } from 'react';
-import { useHandlePrint } from '../hooks/useHandlePrint';
+import { handlePrint } from '../helpers/handlePrint.tsx';
 import { Frames } from '../components/Frames/Frames.tsx';
-import { useHandleDelete } from '../hooks/useHandleDelete.tsx';
+import { handleDelete } from '../helpers/handleDelete.tsx';
+import { useNavigate } from 'react-router-dom';
+import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
 
 export const EditFilm = () => {
   const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
   const [update, {isSuccess, isError}] = useUpdateFilmMutation();
   const [deleteFilm] = useDeleteFilmMutation();
+
   const {id} = useParams();
+  const navigate = useNavigate();
+
   const film = fetchedFilms?.find((film: { _id: string | undefined; }) => film._id === id);
   const [form] = Form.useForm();
-  const onHandleDelete = (id: string) => useHandleDelete(id, deleteFilm);
+
+  // TODO Fix deleting modal
+  const onHandleDelete = (id: string) => {
+    handleDelete(id, deleteFilm).then(()=> navigate('/') )
+  };
   const onSave = async () => {
     await update({
       id: film._id,
       data: {
         ...film,
-        ...form.getFieldsValue(),
+        ...formatFilmForm(form.getFieldsValue()),
       }
     });
 
@@ -52,14 +61,16 @@ export const EditFilm = () => {
   }, [isSuccess, isError]);
 
 
+  // TODO Move to shared logic
   const code = `${film?.code.toString().padStart(4, '0')}${film?.type === 'instant' ? 'I' : film?.type}${film?.color}${film?.iso}`;
 
   const qrWrapperRef = useRef<HTMLDivElement>(null);
+  const breadcrumb = [{title: 'Film list', href: '/'}, {title: 'Edit film'}];
 
   return (
     <div className="main">
       {isLoading && <Spin size="large" fullscreen/>}
-      <Breadcrumb items={[{title: 'Film list', href: '/'}, {title: 'Edit film'}]}/>
+      <Breadcrumb items={breadcrumb}/>
       <Flex align="top" gap={20} justify={'space-between'}>
         <div>
           <div className={styles.qrCode} ref={qrWrapperRef}>
@@ -69,15 +80,17 @@ export const EditFilm = () => {
               size={256}
               style={{height: 'auto', width: '100px', cursor: 'pointer'}}
               value={code}
-              onClick={() => useHandlePrint(qrWrapperRef, code)}
+              onClick={() => handlePrint(qrWrapperRef, code)}
             />
           </div>
           <Title level={1}>Edit Film {code}</Title>
         </div>
-        <Button type="primary" danger onClick={() => onHandleDelete(film.id)}>Delete</Button>
+        <Button type="primary" danger onClick={() => onHandleDelete(id)}>Delete</Button>
       </Flex>
       {!isLoading && <FilmForm form={form} film={film}/>}
-      <Flex justify="flex-end"><Button type="primary" onClick={onSave}>Save</Button></Flex>
+      <Flex justify="flex-end">
+        <Button type="primary" onClick={onSave}>Save</Button>
+      </Flex>
       <Frames code={code} film={film} update={update} refetch={refetch}/>
     </div>
   );
