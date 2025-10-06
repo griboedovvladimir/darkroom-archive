@@ -11,7 +11,7 @@ export const handlePrint = (qrWrapperRef: any, code: string) => {
     const printWindow = window.open('', '_blank');
     printWindow?.document.open();
     printWindow?.document.write(`
-      <html>
+      <html lang="en">
         <head></head>
         <style>
         @media print {
@@ -28,7 +28,7 @@ export const handlePrint = (qrWrapperRef: any, code: string) => {
   }
 }</style>
         <body style="margin:0; padding:0;">
-          <img src="${dataUrl}" style="width:100px;">
+          <img alt="" src="${dataUrl}" style="width:100px;">
           <div style="font-size:14px;">${code}</div>
           <script>
             window.onload = function() {

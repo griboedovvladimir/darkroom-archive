@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 
-export const handleDelete = async (id: string, deleteFilm: any, refetch?: any) => {
+export const handleDelete = async (id: string, deleteFilm: any, refetch?: VoidFunction) => {
     return Modal.confirm({
       title: 'Confirm',
       content: 'Are you sure you want to delete this film?',
