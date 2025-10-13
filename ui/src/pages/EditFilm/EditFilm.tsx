@@ -10,6 +10,7 @@ import { Frames } from '../components/Frames/Frames.tsx';
 import { handleDelete } from '../helpers/handleDelete.tsx';
 import { useNavigate } from 'react-router-dom';
 import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
+import { codeFormator } from '../helpers/codeFormator.ts';
 
 export const EditFilm = () => {
   const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
@@ -18,13 +19,11 @@ export const EditFilm = () => {
 
   const {id} = useParams();
   const navigate = useNavigate();
-
-  const film = fetchedFilms?.find((film: { _id: string | undefined; }) => film._id === id);
   const [form] = Form.useForm();
 
-  // TODO Fix deleting modal
-  const onHandleDelete = (id: string) => {
-    handleDelete(id, deleteFilm).then(()=> navigate('/') )
+  const film = fetchedFilms?.find((film: { _id: string | undefined; }) => film._id === id);
+  const onHandleDelete = (id: string | undefined) => {
+    handleDelete(id, deleteFilm).then(()=> {navigate('/')} )
   };
   const onSave = async () => {
     await update({
@@ -60,15 +59,13 @@ export const EditFilm = () => {
     }
   }, [isSuccess, isError]);
 
-
-  // TODO Move to shared logic
-  const code = `${film?.code.toString().padStart(4, '0')}${film?.type === 'instant' ? 'I' : film?.type}${film?.color}${film?.iso}`;
+  const code = codeFormator(film);
 
   const qrWrapperRef = useRef<HTMLDivElement>(null);
   const breadcrumb = [{title: 'Film list', href: '/'}, {title: 'Edit film'}];
 
   return (
-    <div className="main">
+    <>
       {isLoading && <Spin size="large" fullscreen/>}
       <Breadcrumb items={breadcrumb}/>
       <Flex align="top" gap={20} justify={'space-between'}>
@@ -91,7 +88,7 @@ export const EditFilm = () => {
       <Flex justify="flex-end">
         <Button type="primary" onClick={onSave}>Save</Button>
       </Flex>
-      <Frames code={code} film={film} update={update} refetch={refetch}/>
-    </div>
+      <Frames code={codeFormator(film)} film={film} update={update} refetch={refetch}/>
+    </>
   );
 }

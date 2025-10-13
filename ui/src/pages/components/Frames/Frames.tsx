@@ -2,10 +2,13 @@ import Title from 'antd/es/typography/Title';
 import { Button, Flex } from 'antd';
 import styles from './Frames.module.css';
 import { CloseOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 type Props = { code: string, film: any, update: any, refetch: VoidFunction }
 
 export const Frames = ({film, update, refetch}: Props ) => {
+  const navigate = useNavigate();
+
   const addFrame = async (frameNumber?: number) => {
     await update({
       id: film._id,
@@ -18,7 +21,9 @@ export const Frames = ({film, update, refetch}: Props ) => {
     refetch();
   }
 
-  const onEditFrame = (id: string) => {};
+  const onEditFrame = (id: string) => {
+    navigate(`/${film.code}/frame/${id}`);
+  };
 
   const isFrames = film?.status !== 'unexposed' && film?.status !== 'exposed' && film?.status !== 'loaded';
 

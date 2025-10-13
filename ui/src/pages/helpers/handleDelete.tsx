@@ -1,13 +1,19 @@
 import { Modal } from "antd";
 
-export const handleDelete = async (id: string, deleteFilm: any, refetch?: VoidFunction) => {
-    return Modal.confirm({
+export const handleDelete = (id: string | undefined, deleteFilm: any) => {
+  return new Promise<void>((resolve, reject) => {
+    Modal.confirm({
       title: 'Confirm',
       content: 'Are you sure you want to delete this film?',
       onOk: async () => {
-        await deleteFilm(id).unwrap();
-        refetch();
+        try {
+          await deleteFilm(id).unwrap();
+          resolve(); // только после успешного удаления
+        } catch (err) {
+          reject(err);
+        }
       },
+      onCancel: () => reject(new Error('Cancelled')),
       footer: (_, { OkBtn, CancelBtn }) => (
         <>
           <CancelBtn />
@@ -15,4 +21,5 @@ export const handleDelete = async (id: string, deleteFilm: any, refetch?: VoidFu
         </>
       ),
     });
-  }
+  });
+};

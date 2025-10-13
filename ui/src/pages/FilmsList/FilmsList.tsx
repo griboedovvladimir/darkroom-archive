@@ -64,7 +64,7 @@ export const FilmsList = () => {
   const modalFooterButtons = [<Button key={'key'} type="primary" onClick={onSave}>Save</Button>];
 
   return (
-    <div className="main">
+    <>
       {isFormOpened && <Modal
 				footer={modalFooterButtons}
 				open={isFormOpened}
@@ -105,6 +105,6 @@ export const FilmsList = () => {
           return '';
         }}
       />
-    </div>
+    </>
   );
 }
