@@ -4,8 +4,9 @@ import styles from './Frames.module.css';
 import { CloseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { FilmState } from '../../../enums/FilmState.ts';
+import { IFilm } from '../../../interfaces/IFilm.ts';
 
-type Props = { code: string, film: any, update: any, refetch: VoidFunction }
+type Props = { code: string, film: IFilm, update: any, refetch: VoidFunction }
 
 export const Frames = ({film, update, refetch}: Props) => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const Frames = ({film, update, refetch}: Props) => {
       data: {
         ...film,
         frames: frameNumber
-          ? film.frames.filter((_: unknown, i: number) => i !== frameNumber)
+          ? film?.frames?.filter((_: unknown, i: number) => i !== frameNumber)
           : [...(film.frames || []), {id: (film.frames?.length || 0) + 1}],
       }
     });

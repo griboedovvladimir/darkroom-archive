@@ -64,17 +64,18 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
 
 
   useEffect(() => {
-    const formData = film ? {
-      ...film,
-      useBy: dayjs(film.useBy),
-      loadedDate: dayjs(film.loadedDate),
-      developedDate: dayjs(film.developedDate)
-    } : defaultValues;
+      const formData = film ? {
+        ...film,
+        useBy: dayjs(film.useBy),
+        loadedDate: dayjs(film.loadedDate),
+        developedDate: dayjs(film.developedDate)
+      } : defaultValues;
 
-    setFormState(formStates[film?.status || FilmState.Unexposed]);
-    form.setFieldsValue(formData);
-    setCurrentFilmType(film?.type || '120');
-  }, [form])
+      setFormState(formStates[film?.status || FilmState.Unexposed]);
+      form.setFieldsValue(formData);
+      setCurrentFilmType(film?.type || '120');
+    },
+    [form])
 
   return (
     <Form form={form} layout="vertical" onValuesChange={onFormChange}>
