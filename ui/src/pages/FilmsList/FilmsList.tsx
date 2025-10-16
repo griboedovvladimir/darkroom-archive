@@ -3,13 +3,14 @@ import { Button, Flex, Form, Modal, Select, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { IFilm } from '../../interfaces/IFilm.ts';
 import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
-import { availableColumns as defaultColumns } from '../constants/availableColumns.tsx';
+import { FilmListSorter, getAvailableColumns as defaultColumns } from '../constants/getAvailableColumns.tsx';
 import { useGetFilmsQuery, useAddFilmMutation } from '../../services/api-service.ts';
 import { useNavigate } from 'react-router-dom';
 import { FilmFresh } from '../../enums/FilmFresh.tsx';
 import { mapFilmFields } from '../../helpers/list.helper.ts';
 import styles from './FilmsList.module.css';
 import { ColumnsType } from 'antd/es/table';
+import { FilmFormField } from '../../enums/FilmField.ts';
 
 export const FilmsList = () => {
   const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
@@ -23,12 +24,11 @@ export const FilmsList = () => {
 
   const availableColumns = defaultColumns()
     .map((column) => ({
-    ...column,
-    sorter: column.sorter
-      ? (a: any, b: any) => column.sorter(a, b)
-      : undefined,
-  }));
-  const defaultSelectedColumns = ['status', 'type', 'filmStock', 'camera'];
+      ...column,
+      sorter: column.sorter ? (a: FilmListSorter, b: FilmListSorter) => column.sorter(a, b) : undefined,
+    }));
+  const defaultSelectedColumns =
+    [FilmFormField.Status, FilmFormField.Type, FilmFormField.FilmStock, FilmFormField.Camera];
   const [columns, setColumns] = useState(
     availableColumns.filter((column) =>
       [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
@@ -36,11 +36,10 @@ export const FilmsList = () => {
     [...availableColumns]
       .filter(({key}) => key !== 'action')
       .map((column) => ({
-    value: column.key,
-    label: column.title,
-  }));
+        value: column.key,
+        label: column.title,
+      }));
   columnsOptions.shift();
-
 
   useEffect(() => {
     if (fetchedFilms) {
@@ -56,6 +55,7 @@ export const FilmsList = () => {
 
   const onSave = async () => {
     const addedFilm = formatFilmForm(form.getFieldsValue());
+
     await addFilm(addedFilm).unwrap();
     refetch();
     setIsFormOpened(false);

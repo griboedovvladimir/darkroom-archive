@@ -1,6 +1,10 @@
 import { getAllCameraOptions, statusOptions, typeOptions } from '../../constants/costants';
 
-export const availableColumns = () => [
+//TODO: Move type to common types file
+export type FilmListSorter = { status: number } & { loadedDate: number } & { type: number } & { filmStock: number };
+
+//TODO: Change keys to enyum values
+export const getAvailableColumns = () => [
   {
     title: 'Code',
     dataIndex: 'code',
@@ -15,9 +19,7 @@ export const availableColumns = () => [
       value,
     })),
     onFilter: (value: string, record: { status: string }) => record.status.toLowerCase() === value,
-    sorter: (a: { status: number; }, b: {
-      status: number;
-    }) => a.status !== b.status ? a.status < b.status ? -1 : 1 : 0,
+    sorter: (a: FilmListSorter, b: FilmListSorter) => a.status !== b.status ? a.status < b.status ? -1 : 1 : 0,
   },
   {
     title: 'Use By',
@@ -28,7 +30,7 @@ export const availableColumns = () => [
     title: 'Loaded Date',
     dataIndex: 'loadedDate',
     key: 'loadedDate',
-    sorter: (a: { loadedDate: number; }, b: { loadedDate: number; }) => a.loadedDate - b.loadedDate,
+    sorter: (a: FilmListSorter, b: FilmListSorter) => a.loadedDate - b.loadedDate,
   },
   {
     title: 'Developed Date',
@@ -44,15 +46,14 @@ export const availableColumns = () => [
       text: label,
       value,
     })),
-    sorter: (a: { type: number; }, b: { type: number; }) => a.type !== b.type ? a.type < b.type ? -1 : 1 : 0,
+    sorter: (a: FilmListSorter, b: FilmListSorter) => a.type !== b.type ? a.type < b.type ? -1 : 1 : 0,
   },
   {
     title: 'Film Stock',
     dataIndex: 'filmStock',
     key: 'filmStock',
-    sorter: (a: { filmStock: number; }, b: {
-      filmStock: number;
-    }) => a.filmStock !== b.filmStock ? a.filmStock < b.filmStock ? -1 : 1 : 0,
+    sorter: (a: FilmListSorter, b: FilmListSorter) =>
+      a.filmStock !== b.filmStock ? a.filmStock < b.filmStock ? -1 : 1 : 0,
   },
   {
     title: 'Camera',

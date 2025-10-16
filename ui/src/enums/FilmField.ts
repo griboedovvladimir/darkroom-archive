@@ -1,0 +1,16 @@
+export enum FilmFormField {
+  Format = 'format',
+  Camera = 'camera',
+  LoadedDate = 'loadedDate',
+  UseBy = 'useBy',
+  DevelopedDate = 'developedDate',
+  Developer = 'developer',
+  DeveloperTime = 'developerTime',
+  PullPush = 'pullPush',
+  Scanner = 'scanner',
+  Location = 'location',
+  Notes = 'notes',
+  FilmStock = 'filmStock',
+  Type = 'type',
+  Status = 'status',
+}

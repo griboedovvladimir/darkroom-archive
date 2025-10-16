@@ -12,6 +12,8 @@ import {
 } from '../../../constants/costants.ts';
 import { IFilm } from '../../../interfaces/IFilm.ts';
 import dayjs from 'dayjs';
+import { FilmState } from '../../../enums/FilmState.ts';
+import { FilmFormField } from '../../../enums/FilmField.ts';
 
 const pullPushOptions = [
   {value: '0', label: '0'},
@@ -19,10 +21,10 @@ const pullPushOptions = [
   {value: '-2', label: '-2'},
   {value: '+1', label: '+1'},
   {value: '+2', label: '+2'},
-]
+];
 
 export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => {
-  const [formState, setFormState] = useState(formStates['scanned']);
+  const [formState, setFormState] = useState(formStates[FilmState.Scanned]);
   const [currentFilmType, setCurrentFilmType] = useState<FilmType>('120');
   const defaultValues: IFilm = {
     status: 'unexposed',
@@ -44,21 +46,21 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
     id: ''
   }
 
-  const placeHolder = 'Select a option and change input text above';
-  const disabledDateAfter = (current: unknown): boolean => !!current && current >= dayjs().endOf('day');
-  const onFieldChange = () => {
-  }
+  const placeHolder = 'Select a option';
+  const disabledDateAfter =
+    (current: unknown): boolean => !!current && current >= dayjs().endOf('day');
   const onFormatChange = (type: FilmType) => {
     setCurrentFilmType(type);
-    form.setFieldValue('format', formatOptions(type)[0].value);
-    form.setFieldValue('camera', getCameraOptions(type)[0].value);
-    form.setFieldValue('filmStock',
+    form.setFieldValue(FilmFormField.Format, formatOptions(type)[0].value);
+    form.setFieldValue(FilmFormField.Camera, getCameraOptions(type)[0].value);
+    form.setFieldValue(FilmFormField.FilmStock,
       type === 'instant' ? filmStocks.filter(film => film.process === 'instant')[0].value : filmStockOptions[0].value);
   }
   const onFormChange = (event: Partial<{ status: string }>) => {
     if (event?.status) setFormState(formStates[event?.status]);
   }
-  const statusOptionsByType = form.getFieldValue('type') === 'instant' ? statusOptions.slice(0, 3) : statusOptions;
+  const statusOptionsByType =
+    form.getFieldValue(FilmFormField.Type) === 'instant' ? statusOptions.slice(0, 3) : statusOptions;
 
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
       developedDate: dayjs(film.developedDate)
     } : defaultValues;
 
-    setFormState(formStates[film?.status || 'unexposed']);
+    setFormState(formStates[film?.status || FilmState.Unexposed]);
     form.setFieldsValue(formData);
     setCurrentFilmType(film?.type || '120');
   }, [form])
@@ -80,13 +82,12 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
         <Form.Item name="status" label="Status" rules={[{required: true}]}>
           <Select
             placeholder={placeHolder}
-            onChange={onFieldChange}
             options={statusOptionsByType}
           />
         </Form.Item>
 
         {formState.includes('usedBy') && <Form.Item name="useBy" label="Use By" rules={[{required: true}]}>
-					<DatePicker onChange={onFieldChange}/>
+					<DatePicker/>
 				</Form.Item>}
 
         <Form.Item name="type" label="Type" rules={[{required: true}]}>
@@ -97,77 +98,75 @@ export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => 
           />
         </Form.Item>
 
-        {formState.includes('format') && <Form.Item name="format" label="Format" rules={[{required: true}]}>
-					<Select
-						placeholder={placeHolder}
-						onChange={onFieldChange}
-						options={formatOptions(currentFilmType)}
-					/>
-				</Form.Item>}
+        {formState.includes(FilmFormField.Format) &&
+					<Form.Item name="format" label="Format" rules={[{required: true}]}>
+						<Select
+							placeholder={placeHolder}
+							options={formatOptions(currentFilmType)}
+						/>
+					</Form.Item>}
 
         <Form.Item name="filmStock" label="Film Stock" rules={[{required: true}]}>
           <Select
             placeholder={placeHolder}
-            onChange={onFieldChange}
-            options={currentFilmType === 'instant' ? filmStocks.filter(film => film.process === 'instant') : filmStockOptions}
+            options={currentFilmType === 'instant'
+              ? filmStocks.filter(film => film.process === 'instant') : filmStockOptions}
           />
         </Form.Item>
 
         {formState.includes('camera') && <Form.Item name="camera" label="Camera" rules={[{required: true}]}>
 					<Select
 						placeholder={placeHolder}
-						onChange={onFieldChange}
 						options={getCameraOptions(currentFilmType)}
 					/>
 				</Form.Item>}
 
         {formState.includes('loadedDate') &&
 					<Form.Item name="loadedDate" label="Loaded Date" rules={[{required: true}]}>
-						<DatePicker disabledDate={disabledDateAfter} onChange={onFieldChange}/>
+						<DatePicker disabledDate={disabledDateAfter}/>
 					</Form.Item>}
 
         {formState.includes('developedDate') &&
 					<Form.Item name="developedDate" label="Developed Date" rules={[{required: true}]}>
-						<DatePicker disabledDate={disabledDateAfter} onChange={onFieldChange}/>
+						<DatePicker disabledDate={disabledDateAfter}/>
 					</Form.Item>}
 
-        {formState.includes('developer') && <Form.Item name="developer" label="Developer" rules={[{required: true}]}>
-					<Select
-						placeholder={placeHolder}
-						onChange={onFieldChange}
-						options={developerOptions}
-					/>
-				</Form.Item>}
+        {formState.includes(FilmFormField.Developer) &&
+					<Form.Item name="developer" label="Developer" rules={[{required: true}]}>
+						<Select
+							placeholder={placeHolder}
+							options={developerOptions}
+						/>
+					</Form.Item>}
 
-        {formState.includes('developerTime') &&
+        {formState.includes(FilmFormField.DeveloperTime) &&
 					<Form.Item name="developerTime" label="Developer Time">
-						<TimePicker onChange={onFieldChange}/>
+						<TimePicker/>
 					</Form.Item>}
 
-        {formState.includes('pullPush') && <Form.Item name="pullPush" label="Pull/Push">
+        {formState.includes(FilmFormField.PullPush) && <Form.Item name="pullPush" label="Pull/Push">
 					<Select
 						placeholder={placeHolder}
-						onChange={onFieldChange}
 						options={pullPushOptions}
 					/>
 				</Form.Item>}
 
-        {formState.includes('scanner') && <Form.Item name="scanner" label="Scanner" rules={[{required: true}]}>
+        {formState.includes(FilmFormField.Scanner) &&
+		      <Form.Item name="scanner" label="Scanner" rules={[{required: true}]}>
 					<Select
 						placeholder={placeHolder}
-						onChange={onFieldChange}
 						options={scannerOptions}
 					/>
 				</Form.Item>}
       </Flex>
 
       <div>
-        {formState.includes('location') && <Form.Item name="location" label="Location">
-					<Input onChange={onFieldChange}/>
+        {formState.includes(FilmFormField.Location) && <Form.Item name="location" label="Location">
+					<Input/>
 				</Form.Item>}
 
         <Form.Item name="notes" label="Notes">
-          <Input.TextArea onChange={onFieldChange}/>
+          <Input.TextArea/>
         </Form.Item>
       </div>
     </Form>

@@ -3,10 +3,11 @@ import { Button, Flex } from 'antd';
 import styles from './Frames.module.css';
 import { CloseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { FilmState } from '../../../enums/FilmState.ts';
 
 type Props = { code: string, film: any, update: any, refetch: VoidFunction }
 
-export const Frames = ({film, update, refetch}: Props ) => {
+export const Frames = ({film, update, refetch}: Props) => {
   const navigate = useNavigate();
 
   const addFrame = async (frameNumber?: number) => {
@@ -14,7 +15,9 @@ export const Frames = ({film, update, refetch}: Props ) => {
       id: film._id,
       data: {
         ...film,
-        frames: frameNumber ? film.frames.filter((_: unknown, i: number) => i !== frameNumber) : [...(film.frames || []), {id: (film.frames?.length || 0) + 1}],
+        frames: frameNumber
+          ? film.frames.filter((_: unknown, i: number) => i !== frameNumber)
+          : [...(film.frames || []), {id: (film.frames?.length || 0) + 1}],
       }
     });
 
@@ -25,7 +28,8 @@ export const Frames = ({film, update, refetch}: Props ) => {
     navigate(`/${film.code}/frame/${id}`);
   };
 
-  const isFrames = film?.status !== 'unexposed' && film?.status !== 'exposed' && film?.status !== 'loaded';
+  const isFrames =
+    film?.status !== FilmState.Unexposed && film?.status !== FilmState.Exposed && film?.status !== FilmState.Loaded;
 
   return (
     <>
@@ -36,7 +40,7 @@ export const Frames = ({film, update, refetch}: Props ) => {
             <Button className={styles.addCard} onClick={() => onEditFrame(frame.id)}>
               <Flex className={styles.frameCard} vertical key={index} justify={'space-between'}>
                 <Flex justify={'end'}>
-                  <CloseOutlined onClick={() => addFrame(index)} />
+                  <CloseOutlined onClick={() => addFrame(index)}/>
                 </Flex>
                 <div>Frame {`${index + 1}`}</div>
               </Flex>
