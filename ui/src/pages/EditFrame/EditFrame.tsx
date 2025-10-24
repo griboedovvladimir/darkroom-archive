@@ -1,5 +1,14 @@
 import { FrameForm } from '../components/FrameForm';
+import Title from 'antd/es/typography/Title';
 
 export const EditFrame = () => {
-  return <FrameForm/>;
+
+  const code = '';
+
+  return (
+    <>
+      <Title level={1}>Edit Frame {code}</Title>
+      <FrameForm/>
+    </>
+  );
 }

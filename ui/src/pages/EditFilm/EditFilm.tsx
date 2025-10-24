@@ -69,7 +69,7 @@ export const EditFilm = () => {
       {isLoading && <Spin size="large" fullscreen/>}
       <Breadcrumb items={breadcrumb}/>
       <Flex align="top" gap={20} justify={'space-between'}>
-        <div>
+        <Flex gap={20} >
           <div className={styles.qrCode} ref={qrWrapperRef}>
             <QRCode
               bordered={false}
@@ -81,7 +81,7 @@ export const EditFilm = () => {
             />
           </div>
           <Title level={1}>Edit Film {code}</Title>
-        </div>
+        </Flex>
         <Button type="primary" danger onClick={() => onHandleDelete(id)}>Delete</Button>
       </Flex>
       {!isLoading && <FilmForm form={form} film={film}/>}
