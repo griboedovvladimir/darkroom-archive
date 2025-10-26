@@ -1,5 +1,5 @@
 export interface IFilm {
-  code: any;
+  code?: number;
   id: string,
   _id?: string,
   iso?: number,

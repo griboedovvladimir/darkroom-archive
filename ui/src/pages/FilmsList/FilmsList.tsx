@@ -27,11 +27,14 @@ export const FilmsList = () => {
       ...column,
       sorter: column.sorter ? (a: FilmListSorter, b: FilmListSorter) => column.sorter(a, b) : undefined,
     }));
+  
   const defaultSelectedColumns =
     [FilmFormField.Status, FilmFormField.Type, FilmFormField.FilmStock, FilmFormField.Camera];
+  
   const [columns, setColumns] = useState(
     availableColumns.filter((column) =>
       [...defaultSelectedColumns, 'code'].includes(column.key) || column.key === 'action'));
+  
   const columnsOptions =
     [...availableColumns]
       .filter(({key}) => key !== 'action')
@@ -98,7 +101,7 @@ export const FilmsList = () => {
             setPageSize(size);
           },
         }}
-        onRow={(record) => ({onClick: () => navigate(`/edit/${record._id}`)})}
+        onRow={(record) => ({onClick: () => navigate(`/edit/${record.code}`)})}
         rowClassName={(record: IFilm) => {
           if (record.fresh === FilmFresh.Danger) return 'row-error';
           if (record.fresh === FilmFresh.Warning) return 'row-warning';

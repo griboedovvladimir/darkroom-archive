@@ -1,7 +1,7 @@
 import { Breadcrumb, Button, Flex, Form, notification, QRCode, Spin } from 'antd';
 import { FilmForm } from '../components/FilmForm';
 import Title from 'antd/es/typography/Title';
-import { useDeleteFilmMutation, useGetFilmsQuery, useUpdateFilmMutation } from '../../services/api-service';
+import { useDeleteFilmMutation, useGetFilmByIdQuery, useUpdateFilmMutation } from '../../services/api-service';
 import { useParams } from 'react-router';
 import styles from './EditFilm.module.css';
 import { useEffect, useRef } from 'react';
@@ -13,23 +13,22 @@ import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
 import { codeFormator } from '../helpers/codeFormator.ts';
 
 export const EditFilm = () => {
-  const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
+  const {id} = useParams();
+  const {data: fetchedFilm, isLoading, refetch} = useGetFilmByIdQuery(id);
   const [update, {isSuccess, isError}] = useUpdateFilmMutation();
   const [deleteFilm] = useDeleteFilmMutation();
 
-  const {id} = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const film = fetchedFilms?.find((film: { _id: string | undefined; }) => film._id === id);
   const onHandleDelete = (id: string | undefined) => {
     handleDelete(id, deleteFilm).then(()=> {navigate('/')} )
   };
   const onSave = async () => {
     await update({
-      id: film._id,
+      id: fetchedFilm._id,
       data: {
-        ...film,
+        ...fetchedFilm,
         ...formatFilmForm(form.getFieldsValue()),
       }
     });
@@ -59,7 +58,7 @@ export const EditFilm = () => {
     }
   }, [isSuccess, isError]);
 
-  const code = codeFormator(film);
+  const code = codeFormator(fetchedFilm);
 
   const qrWrapperRef = useRef<HTMLDivElement>(null);
   const breadcrumb = [{title: 'Film list', href: '/'}, {title: 'Edit film'}];
@@ -84,11 +83,11 @@ export const EditFilm = () => {
         </Flex>
         <Button type="primary" danger onClick={() => onHandleDelete(id)}>Delete</Button>
       </Flex>
-      {!isLoading && <FilmForm form={form} film={film}/>}
+      {!isLoading && <FilmForm form={form} film={fetchedFilm}/>}
       <Flex justify="flex-end">
         <Button type="primary" onClick={onSave}>Save</Button>
       </Flex>
-      <Frames code={codeFormator(film)} film={film} update={update} refetch={refetch}/>
+      <Frames code={codeFormator(fetchedFilm)} film={fetchedFilm} update={update} refetch={refetch}/>
     </>
   );
 }

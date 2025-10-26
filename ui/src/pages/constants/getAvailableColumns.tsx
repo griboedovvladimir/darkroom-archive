@@ -7,7 +7,7 @@ export type FilmListSorter = { status: number } & { loadedDate: number } & { typ
 export const getAvailableColumns = () => [
   {
     title: 'Code',
-    dataIndex: 'code',
+    dataIndex: 'fullCode',
     key: 'code',
   },
   {

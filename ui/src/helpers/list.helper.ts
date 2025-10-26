@@ -24,7 +24,7 @@ export const  mapFilmFields = (film: IFilm) => {
     developedDate: formatDate(film.developedDate),
     useBy: formatDate(film.useBy),
     status: statusOptions.find((status) => status.value === film.status)?.label,
-    code: `${film.code.toString().padStart(4, '0')}${film.type === 'instant' ? 'I' : film.type}${film.color}${film.iso}`,
+    fullCode: `${film.code.toString().padStart(4, '0')}${film.type === 'instant' ? 'I' : film.type}${film.color}${film.iso}`,
     fresh: isFresh(film),
     frameCount: film.frames?.length,
   };
