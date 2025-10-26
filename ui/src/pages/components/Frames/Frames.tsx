@@ -37,9 +37,9 @@ export const Frames = ({film, update, refetch}: Props) => {
       {isFrames && <div>
 				<Title level={1}>Frames</Title>
 				<Flex gap={10} wrap>
-          {film?.frames.map((frame: { id: string; }, index: number) => (
-            <Button className={styles.addCard} onClick={() => onEditFrame(frame.id)}>
-              <Flex className={styles.frameCard} vertical key={index} justify={'space-between'}>
+          {film?.frames?.map((frame: { id: string; }, index: number) => (
+            <Button key={index} className={styles.addCard} onClick={() => onEditFrame(frame.id)}>
+              <Flex className={styles.frameCard} vertical justify={'space-between'}>
                 <Flex justify={'end'}>
                   <CloseOutlined onClick={() => addFrame(index)}/>
                 </Flex>

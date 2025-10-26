@@ -19,7 +19,7 @@ export interface IFilm {
   developerTime: string,
   pullPush: string,
   notes: string,
-  frames?: string[],
+  frames?: {id: string}[],
   createdAt?: string,
   updatedAt?: string,
   fresh?: 'danger' | 'warning',

@@ -14,6 +14,11 @@ export const getAvailableColumns = () => [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
+    defaultFilteredValue: [
+      statusOptions[0].value, 
+      statusOptions[1].value, 
+ 
+    ],
     filters: statusOptions.map(({value, label}) => ({
       text: label,
       value,
