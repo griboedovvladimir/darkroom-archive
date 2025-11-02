@@ -1,15 +1,15 @@
-export const cameras: Record<string, { value: string, label: string, format: string }[]> = {
+export const cameras: Record<string, { value: string, label: string, format: string, formatCode?: string }[]> = {
   '120': [
-    {value: '1', label: 'Hasselblad 500CM', format: '6x6'},
-    {value: '2', label: 'Rolleiflex 2.8C', format: '6x6'},
-    {value: '3', label: 'Diana F+', format: '6x6'},
-    {value: '4', label: 'Voigtlander Bessa 46', format: '6x4.5'},
-    {value: '5', label: 'Salut-S', format: '6x6'},
+    {value: '1', label: 'Hasselblad 500CM', format: '6x6', formatCode: '66'},
+    {value: '2', label: 'Rolleiflex 2.8C', format: '6x6', formatCode: '66'},
+    {value: '3', label: 'Diana F+', format: '6x6', formatCode: '66'},
+    {value: '4', label: 'Voigtlander Bessa 46', format: '6x4.5', formatCode: '645'},
+    {value: '5', label: 'Salut-S', format: '6x6', formatCode: '66'},
   ],
   'sheet': [
-    {value: '1', label: 'FKD 5x7', format: '5x7'},
-    {value: '2', label: 'FKD 4x5', format: '4x5'},
-    {value: '3', label: 'FKD 8x10', format: '8x10'},],
+    {value: '1', label: 'FKD 5x7', format: '5x7', formatCode: '57'},
+    {value: '2', label: 'FKD 4x5', format: '4x5', formatCode: '45'},
+    {value: '3', label: 'FKD 8x10', format: '8x10', formatCode: '810'},],
   'instant': [
     {value: '1', label: 'Polaroid Impulse Portrait', format: 'palaroid'},
     {value: '2', label: 'Polaroid SX-70', format: 'palaroid'},
@@ -19,11 +19,10 @@ export const cameras: Record<string, { value: string, label: string, format: str
     {value: '6', label: 'Diana F+', format: 'mini'},
   ],
   '135': [
-    {value: '1', label: 'Rolie 35S', format: 'full'},
-    {value: '2', label: 'Olympus mju II', format: 'full'},
-    {value: '3', label: 'Diana F+', format: 'full'},
-    {value: '4', label: 'Horizon 202', format: 'panoramic'},
-    {value: '5', label: 'Lomo LC-A', format: 'full'}
+    {value: '1', label: 'Rolie 35S', format: 'full', formatCode: 'FF'},
+    {value: '3', label: 'Diana F+', format: 'full', formatCode: 'FF'},
+    {value: '4', label: 'Horizon 202', format: 'panoramic', formatCode: 'PAN'},
+    {value: '5', label: 'Lomo LC-A', format: 'full', formatCode: 'FF'}
   ],
 }
 
@@ -109,23 +108,44 @@ export const scannerOptions = [
 ];
 
 export const shooterSpeedOptions = [
-  {label: '1', value: '10"'},
-  {label: '2', value: '5"'},
-  {label: '3', value: '2"'},
-  {label: '4', value: '1"'},
-  {label: '5', value: '1/2'},
-  {label: '6', value: '1/4'},
-  {label: '7', value: '1/8'},
-  {label: '8', value: '1/15'},
-  {label: '9', value: '1/30'},
-  {label: '10', value: '1/60'},
-  {label: '11', value: '1/128'},
-  {label: '12', value: '1/250'},
-  {label: '13', value: '1/500'},
-  {label: '14', value: '1/1000'},
-  {label: '15', value: '1/2000'},
-  {label: '16', value: '1/4000'},
-  {label: '17', value: '1/8000'},
+  {value: '1', label: 'auto'},
+  {value: '2', label: '10"'},
+  {value: '3', label: '5"'},
+  {value: '4', label: '2"'},
+  {value: '5', label: '1"'},
+  {value: '6', label: '1/2'},
+  {value: '7', label: '1/4'},
+  {value: '8', label: '1/8'},
+  {value: '9', label: '1/15'},
+  {value: '10', label: '1/30'},
+  {value: '11', label: '1/60'},
+  {value: '12', label: '1/128'},
+  {value: '13', label: '1/250'},
+  {value: '14', label: '1/500'},
+  {value: '15', label: '1/1000'},
+  {value: '16', label: '1/2000'},
+  {value: '17', label: '1/4000'},
+  {value: '18', label: '1/8000'},
+  {value: '19', label: 'Bulb'},
+];
+
+export const apertureOptions = [
+  {value: '1', label: 'auto'},
+  {value: '2', label: '1.2'},
+  {value: '3', label: '1.4'},
+  {value: '4', label: '1.7'},
+  {value: '5', label: '2'},
+  {value: '6', label: '2.8'},
+  {value: '7', label: '3.2'},
+  {value: '8', label: '4'},
+  {value: '9', label: '5.6'},
+  {value: '10', label: '8'},
+  {value: '11', label: '11'},
+  {value: '12', label: '16'},
+  {value: '13', label: '22'},
+  {value: '14', label: '32'},
+  {value: '15', label: '64'},
+  {value: '16', label: 'pinhole'},
 ];
 
 export const filmStockOptions = filmStocks.map((stock) => (
@@ -136,7 +156,16 @@ export const formStates: Record<string, string[]> = {
   loaded: ['camera', 'format', 'loadedDate', 'usedBy'],
   exposed: ['camera', 'format', 'loadedDate', 'location'],
   developed: ['camera', 'format', 'loadedDate', 'developedDate', 'developer', 'developerTime', 'pullPush', 'location'],
-  scanned: ['camera', 'format', 'loadedDate', 'developedDate', 'developer', 'developerTime', 'pullPush', 'location', 'scanner'],
+  scanned: [
+    'camera', 
+    'format', 
+    'loadedDate', 
+    'developedDate', 
+    'developer', 
+    'developerTime', 
+    'pullPush', 
+    'location', 
+    'scanner'],
 }
 
 export type FilmType = keyof typeof Formats;
@@ -146,14 +175,13 @@ export const getAllCameraOptions = () => {
   return allCameras.map((camera, idx) => ({value: idx + 1, label: camera.label}));
 }
 
-export const getCameraOptions = (filmType: FilmType) => cameras[filmType].map((camera) => (
-  {value: camera.value, label: camera.label}));
-
+export const getCameraOptions = (filmType: FilmType) => cameras[filmType].map(({value, label}) => ({value, label}));
 export const formatOptions = (filmType: FilmType) => Formats[filmType].map((format) => (
   {value: format, label: format}));
 
 export const Formats = Object.keys(cameras).reduce((acc, type) => {
-  acc[type] = cameras[type].map((camera) => camera.format).filter((format, index, self) => self.indexOf(format) === index);
+  acc[type] = cameras[type].map((camera) => camera.format)
+    .filter((format, index, self) => self.indexOf(format) === index);
   return acc;
 }, {} as Record<string, string[]>);
 

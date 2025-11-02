@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { FilmState } from '../../../enums/FilmState.ts';
 import { IFilm } from '../../../interfaces/IFilm.ts';
 
+//TODO: Remove any
 type Props = { code: string, film: IFilm, update: any, refetch: VoidFunction }
 
-export const Frames = ({film, update, refetch}: Props) => {
+export const Frames = ({film, update}: Props) => {
   const navigate = useNavigate();
 
   const addFrame = async (frameNumber?: number) => {
@@ -22,12 +23,11 @@ export const Frames = ({film, update, refetch}: Props) => {
       }
     });
 
-    refetch();
+    //TODO: Frame index should be createated another way
+    navigate(`/film/${film.code}/frame/${(film.frames?.length || 0) + 1}`);
   }
 
-  const onEditFrame = (id: string) => {
-    navigate(`/${film.code}/frame/${id}`);
-  };
+  const onEditFrame = (id: string) => navigate(`/film/${film.code}/frame/${id}`);
 
   const isFrames =
     film?.status !== FilmState.Unexposed && film?.status !== FilmState.Exposed && film?.status !== FilmState.Loaded;

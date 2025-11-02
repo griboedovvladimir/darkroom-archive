@@ -3,14 +3,13 @@ import { FilmForm } from '../components/FilmForm';
 import Title from 'antd/es/typography/Title';
 import { useDeleteFilmMutation, useGetFilmByIdQuery, useUpdateFilmMutation } from '../../services/api-service';
 import { useParams } from 'react-router';
-import styles from './EditFilm.module.css';
-import { useEffect, useRef } from 'react';
-import { handlePrint } from '../helpers/handlePrint.tsx';
+import { useEffect } from 'react';
 import { Frames } from '../components/Frames/Frames.tsx';
 import { handleDelete } from '../helpers/handleDelete.tsx';
 import { useNavigate } from 'react-router-dom';
 import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
-import { codeFormator } from '../helpers/codeFormator.ts';
+import { filmCodeFormator } from '../helpers/codeFormator.ts';
+import { QRCodeCreater } from '../components/QRCodeCreater/QRCodeCreater.tsx';
 
 export const EditFilm = () => {
   const {id} = useParams();
@@ -58,36 +57,27 @@ export const EditFilm = () => {
     }
   }, [isSuccess, isError]);
 
-  const code = codeFormator(fetchedFilm);
-
-  const qrWrapperRef = useRef<HTMLDivElement>(null);
-  const breadcrumb = [{title: 'Film list', href: '/'}, {title: 'Edit film'}];
+  const code = filmCodeFormator(fetchedFilm);
+  const breadcrumb = [{title: 'Film list', href: '/'}, {title: `Film ${code}`}];
 
   return (
     <>
       {isLoading && <Spin size="large" fullscreen/>}
-      <Breadcrumb items={breadcrumb}/>
-      <Flex align="top" gap={20} justify={'space-between'}>
-        <Flex gap={20} >
-          <div className={styles.qrCode} ref={qrWrapperRef}>
-            <QRCode
-              bordered={false}
-              type="canvas"
-              size={256}
-              style={{height: 'auto', width: '100px', cursor: 'pointer'}}
-              value={code}
-              onClick={() => handlePrint(qrWrapperRef, code)}
-            />
-          </div>
-          <Title level={1}>Edit Film {code}</Title>
+      {!isLoading && <>
+        <Breadcrumb items={breadcrumb} />
+        <Flex align="top" gap={20} justify={'space-between'}>
+          <Flex gap={20} >
+          <QRCodeCreater code={code} />
+            <Title level={1}>Film {code}</Title>
+          </Flex>
+          <Button type="primary" danger onClick={() => onHandleDelete(id)}>Delete</Button>
         </Flex>
-        <Button type="primary" danger onClick={() => onHandleDelete(id)}>Delete</Button>
-      </Flex>
-      {!isLoading && <FilmForm form={form} film={fetchedFilm}/>}
-      <Flex justify="flex-end">
-        <Button type="primary" onClick={onSave}>Save</Button>
-      </Flex>
-      <Frames code={codeFormator(fetchedFilm)} film={fetchedFilm} update={update} refetch={refetch}/>
+        <FilmForm form={form} film={fetchedFilm} />
+        <Flex justify="flex-end">
+          <Button type="primary" onClick={onSave}>Save</Button>
+        </Flex>
+        <Frames code={filmCodeFormator(fetchedFilm)} film={fetchedFilm} update={update} refetch={refetch} />
+      </>}
     </>
   );
 }

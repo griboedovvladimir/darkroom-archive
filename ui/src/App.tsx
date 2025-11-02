@@ -34,8 +34,8 @@ function App() {
           <Router>
             <Routes>
               <Route path="/" element={<FilmsList/>}/>
-              <Route path="/edit/:id" element={<EditFilm/>}/>
-              <Route path=":filmCode/frame/:id" element={<EditFrame/>}/>
+              <Route path="/film/:id" element={<EditFilm/>}/>
+              <Route path="/film/:filmCode/frame/:id" element={<EditFrame/>}/>
             </Routes>
           </Router>
         </div>

@@ -101,7 +101,7 @@ export const FilmsList = () => {
             setPageSize(size);
           },
         }}
-        onRow={(record) => ({onClick: () => navigate(`/edit/${record.code}`)})}
+        onRow={(record) => ({onClick: () => navigate(`/film/${record.code}`)})}
         rowClassName={(record: IFilm) => {
           if (record.fresh === FilmFresh.Danger) return 'row-error';
           if (record.fresh === FilmFresh.Warning) return 'row-warning';
