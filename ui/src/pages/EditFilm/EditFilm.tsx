@@ -1,15 +1,15 @@
-import { Breadcrumb, Button, Flex, Form, notification, QRCode, Spin } from 'antd';
-import { FilmForm } from '../components/FilmForm';
+import { Breadcrumb, Button, Flex, Form, notification, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useDeleteFilmMutation, useGetFilmByIdQuery, useUpdateFilmMutation } from '../../services/api-service';
-import { useParams } from 'react-router';
 import { useEffect } from 'react';
-import { Frames } from '../components/Frames/Frames.tsx';
-import { handleDelete } from '../helpers/handleDelete.tsx';
+import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
-import { filmCodeFormator } from '../helpers/codeFormator.ts';
+import { useDeleteFilmMutation, useGetFilmByIdQuery, useUpdateFilmMutation } from '../../services/api-service';
+import { FilmForm } from '../components/FilmForm';
+import { Frames } from '../components/Frames/Frames.tsx';
 import { QRCodeCreater } from '../components/QRCodeCreater/QRCodeCreater.tsx';
+import { filmCodeFormator } from '../helpers/codeFormator.ts';
+import { handleDelete } from '../helpers/handleDelete.tsx';
 
 export const EditFilm = () => {
   const {id} = useParams();
@@ -21,7 +21,7 @@ export const EditFilm = () => {
   const [form] = Form.useForm();
 
   const onHandleDelete = (id: string | undefined) => {
-    handleDelete(id, deleteFilm).then(()=> {navigate('/')} )
+    handleDelete(id, deleteFilm, 'film').then(()=> {navigate('/')})
   };
   const onSave = async () => {
     await update({

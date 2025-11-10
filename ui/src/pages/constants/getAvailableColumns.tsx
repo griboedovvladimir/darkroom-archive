@@ -23,6 +23,7 @@ export const getAvailableColumns = () => [
       text: label,
       value,
     })),
+    filterMode: 'tree',
     onFilter: (value: string, record: { status: string }) => record.status.toLowerCase() === value,
     sorter: (a: FilmListSorter, b: FilmListSorter) => a.status !== b.status ? a.status < b.status ? -1 : 1 : 0,
   },
@@ -46,6 +47,7 @@ export const getAvailableColumns = () => [
     title: 'Type',
     dataIndex: 'type',
     key: 'type',
+     filterMode: 'tree',
     onFilter: (value: string, record: { type: string | string[]; }) => record.type.includes(value as string),
     filters: typeOptions.map(({value, label}) => ({
       text: label,
@@ -68,6 +70,7 @@ export const getAvailableColumns = () => [
       text: label,
       value,
     })),
+     filterMode: 'tree',
     onFilter: (value: string, record: {
       camera: string
     }) => record.camera === getAllCameraOptions().find(option => option.value === Number(value))?.label

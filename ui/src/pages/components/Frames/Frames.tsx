@@ -1,13 +1,18 @@
-import Title from 'antd/es/typography/Title';
-import { Button, Flex } from 'antd';
-import styles from './Frames.module.css';
 import { CloseOutlined } from '@ant-design/icons';
+import { Button, Flex } from 'antd';
+import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 import { FilmState } from '../../../enums/FilmState.ts';
-import { IFilm } from '../../../interfaces/IFilm.ts';
+import { IFilm, IFrame } from '../../../interfaces/IFilm.ts';
+import styles from './Frames.module.css';
 
-//TODO: Remove any
-type Props = { code: string, film: IFilm, update: any, refetch: VoidFunction }
+type Props = 
+{ 
+  code: string, 
+  film: IFilm, 
+  update: (data: {id: string | undefined, data: IFilm}) => Promise<void>, 
+  refetch: VoidFunction 
+}
 
 export const Frames = ({film, update}: Props) => {
   const navigate = useNavigate();
@@ -19,7 +24,7 @@ export const Frames = ({film, update}: Props) => {
         ...film,
         frames: frameNumber
           ? film?.frames?.filter((_: unknown, i: number) => i !== frameNumber)
-          : [...(film.frames || []), {id: (film.frames?.length || 0) + 1}],
+          : [...(film.frames || []), {id: ((film.frames?.length || 0) + 1).toString()} as IFrame],
       }
     });
 
@@ -37,12 +42,15 @@ export const Frames = ({film, update}: Props) => {
       {isFrames && <div>
 				<Title level={1}>Frames</Title>
 				<Flex gap={10} wrap>
-          {film?.frames?.map((frame: { id: string; }, index: number) => (
-            <Button key={index} className={styles.addCard} onClick={() => onEditFrame(frame.id)}>
+          {film?.frames?.map((frame: IFrame, index: number) => (
+            <Button key={frame.id} className={styles.addCard} onClick={() => onEditFrame(frame.id)}>
               <Flex className={styles.frameCard} vertical justify={'space-between'}>
                 <Flex justify={'end'}>
                   <CloseOutlined onClick={() => addFrame(index)}/>
                 </Flex>
+                <span>{frame.shooterSpeed}</span>
+                <span>{frame.apertureValue}</span>
+                <span>{frame.date}</span>
                 <div>Frame {`${index + 1}`}</div>
               </Flex>
             </Button>

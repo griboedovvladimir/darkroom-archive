@@ -19,7 +19,7 @@ export const FilmsList = () => {
   const [isFormOpened, setIsFormOpened] = useState(false);
   const [form] = Form.useForm();
   const [films, setFilms] = useState<IFilm[]>([]);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(15);
   const navigate = useNavigate();
 
   const availableColumns = defaultColumns()
@@ -96,7 +96,7 @@ export const FilmsList = () => {
         pagination={{
           pageSize,
           showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '50'],
+          pageSizeOptions: ['15', '20', '50'],
           onShowSizeChange: (_current, size) => {
             setPageSize(size);
           },

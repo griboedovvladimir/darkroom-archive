@@ -1,14 +1,15 @@
 import { Modal } from "antd";
 
-export const handleDelete = (id: string | undefined, deleteFilm: any) => {
+export const handleDelete = 
+  (id: string | undefined, deleteFilm: (id: string | undefined) => any, entity: string) => {
   return new Promise<void>((resolve, reject) => {
     Modal.confirm({
       title: 'Confirm',
-      content: 'Are you sure you want to delete this film?',
+      content: `Are you sure you want to delete this ${entity}?`,
       onOk: async () => {
         try {
           await deleteFilm(id).unwrap();
-          resolve(); // только после успешного удаления
+          resolve();
         } catch (err) {
           reject(err);
         }

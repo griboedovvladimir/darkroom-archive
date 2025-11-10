@@ -8,20 +8,13 @@ import {
   filmStocks, FilmType,
   formatOptions, formStates,
   getCameraOptions,
+  pullPushOptions,
   scannerOptions, statusOptions, typeOptions
 } from '../../../constants/costants.ts';
 import { IFilm } from '../../../interfaces/IFilm.ts';
 import dayjs from 'dayjs';
 import { FilmState } from '../../../enums/FilmState.ts';
 import { FilmFormField } from '../../../enums/FilmField.ts';
-
-const pullPushOptions = [
-  {value: '0', label: '0'},
-  {value: '-1', label: '-1'},
-  {value: '-2', label: '-2'},
-  {value: '+1', label: '+1'},
-  {value: '+2', label: '+2'},
-];
 
 export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => {
   const [formState, setFormState] = useState(formStates[FilmState.Scanned]);

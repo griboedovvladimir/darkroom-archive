@@ -84,7 +84,7 @@ router.post("/", async (req: Request, res: Response) => {
  */
 router.put("/:id", async (req: Request, res: Response) => {
   try {
-    const updated = await Item.findByIdAndUpdate(req.params.id, req.body, {
+    const updated = await Item.findByIdAndUpdate(req.params.id, req.body.data, {
       new: true,
       runValidators: false,
     });
