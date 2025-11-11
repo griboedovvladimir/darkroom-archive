@@ -1,63 +1,28 @@
+import { IFrame } from "./IFrame";
+
 export interface IFilm {
   code?: number;
-  id: string,
-  _id?: string,
-  iso?: number,
-  color?: string,
-  process?: string,
-  status: string,
-  loadedDate: string,
-  developedDate: string,
-  type: string,
-  filmStock: string,
-  camera: string,
-  location: string,
-  scanner: string,
-  useBy: string,
-  format: string,
-  developer: string,
-  developerTime: string,
-  pullPush: string,
-  notes: string,
-  frames?: {id: string}[],
-  createdAt?: string,
-  updatedAt?: string,
-  fresh?: 'danger' | 'warning',
-}
-
-export interface IFrame {
-  id: string,
-  format?: string,
-  frameCount?: number,
-  lens?: string,
-  lensFocalLength?: string,
-  apertureValue?: string,
-  focus?: string,
-  date?: string,
-  shooterSpeed?: string,
-  location?: string,
-  filter?: string,
-  tripod?: boolean,
-  flashlight?: boolean,
-  notes?: string,
-  prints?: IPrint[],
-}
-
-export interface IPrint {
-  id: string,
-  frameId: string,
-  printNumber: number,
-  printDate: string,
-  printSize: string,
-  paper: string,
-  enlarger: string,
-  lens: string,
-  lensFocalLength: string,
-  aperture: string,
-  shutterSpeed?: string,
-  developer: string,
-  developerTime: string,
-  pullPush: string,
-  toner: string,
-  notes: string,
+  id: string;
+  _id?: string;
+  iso?: number;
+  color?: string;
+  process?: string;
+  status: string;
+  loadedDate: string;
+  developedDate: string;
+  type: string;
+  filmStock: string;
+  camera: string;
+  location: string;
+  scanner: string;
+  useBy: string;
+  format: string;
+  developer: string;
+  developerTime: string;
+  pullPush: string;
+  notes: string;
+  frames?: IFrame[];
+  createdAt?: string;
+  updatedAt?: string;
+  fresh?: "danger" | "warning";
 }

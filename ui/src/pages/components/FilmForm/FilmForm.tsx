@@ -1,20 +1,22 @@
 import { DatePicker, Flex, Form, Input, Select, TimePicker } from 'antd';
-import styles from './FilmForm.module.css';
-import { useEffect, useState } from 'react';
 import { FormInstance } from 'antd/es/form/hooks/useForm';
-import {
-  developerOptions,
-  filmStockOptions,
-  filmStocks, FilmType,
-  formatOptions, formStates,
-  getCameraOptions,
-  pullPushOptions,
-  scannerOptions, statusOptions, typeOptions
-} from '../../../constants/costants.ts';
-import { IFilm } from '../../../interfaces/IFilm.ts';
 import dayjs from 'dayjs';
-import { FilmState } from '../../../enums/FilmState.ts';
+import { useEffect, useState } from 'react';
+import {
+    developerOptions,
+    filmStockOptions,
+    filmStocks, FilmType,
+    formatOptions, formStates,
+    getCameraOptions,
+    pullPushOptions,
+    scannerOptions,
+    statusOptions,
+    typeOptions,
+} from '../../../constants/costants';
 import { FilmFormField } from '../../../enums/FilmField.ts';
+import { FilmState } from '../../../enums/FilmState';
+import { IFilm } from '../../../interfaces/IFilm';
+import styles from './FilmForm.module.css';
 
 export const FilmForm = ({form, film}: { form: FormInstance, film?: IFilm }) => {
   const [formState, setFormState] = useState(formStates[FilmState.Scanned]);
