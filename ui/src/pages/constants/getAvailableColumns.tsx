@@ -15,9 +15,9 @@ export const getAvailableColumns = () => [
     dataIndex: 'status',
     key: 'status',
     defaultFilteredValue: [
-      statusOptions[0].value, 
-      statusOptions[1].value, 
- 
+      statusOptions[0].value,
+      statusOptions[1].value,
+
     ],
     filters: statusOptions.map(({value, label}) => ({
       text: label,
@@ -47,7 +47,7 @@ export const getAvailableColumns = () => [
     title: 'Type',
     dataIndex: 'type',
     key: 'type',
-     filterMode: 'tree',
+    filterMode: 'tree',
     onFilter: (value: string, record: { type: string | string[]; }) => record.type.includes(value as string),
     filters: typeOptions.map(({value, label}) => ({
       text: label,
@@ -70,7 +70,7 @@ export const getAvailableColumns = () => [
       text: label,
       value,
     })),
-     filterMode: 'tree',
+    filterMode: 'tree',
     onFilter: (value: string, record: {
       camera: string
     }) => record.camera === getAllCameraOptions().find(option => option.value === Number(value))?.label

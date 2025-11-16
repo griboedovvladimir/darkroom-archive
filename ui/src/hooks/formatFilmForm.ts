@@ -1,9 +1,9 @@
-import { IFilm } from "../interfaces/IFilm";
+import { IFilm } from '../interfaces/IFilm';
 import {
   cameras,
   developerOptions,
   filmStocks,
-} from "../constants/costants";
+} from '../constants/costants';
 
 export const formatFilmForm = (filmForm: any): IFilm => {
   const filmStock = filmStocks?.find(

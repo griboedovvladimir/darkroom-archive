@@ -1,25 +1,25 @@
-import { FilmForm } from "../components/FilmForm";
-import { Button, Flex, Form, Modal, Select, Table } from "antd";
-import { useEffect, useState } from "react";
-import { IFilm } from "../../interfaces/IFilm";
-import { formatFilmForm } from "../../hooks/formatFilmForm.ts";
+import { FilmForm } from '../components/FilmForm';
+import { Button, Flex, Form, Modal, Select, Table } from 'antd';
+import { useEffect, useState } from 'react';
+import { IFilm } from '../../interfaces/IFilm';
+import { formatFilmForm } from '../../hooks/formatFilmForm.ts';
 import {
   FilmListSorter,
   getAvailableColumns as defaultColumns,
-} from "../constants/getAvailableColumns.tsx";
+} from '../constants/getAvailableColumns.tsx';
 import {
   useGetFilmsQuery,
   useAddFilmMutation,
-} from "../../services/api-service.ts";
-import { useNavigate } from "react-router-dom";
-import { FilmFresh } from "../../enums/FilmFresh.tsx";
-import { mapFilmFields } from "../../helpers/list.helper.ts";
-import styles from "./FilmsList.module.css";
-import { ColumnsType } from "antd/es/table";
-import { FilmFormField } from "../../enums/FilmField.ts";
+} from '../../services/api-service.ts';
+import { useNavigate } from 'react-router-dom';
+import { FilmFresh } from '../../enums/FilmFresh.tsx';
+import { mapFilmFields } from '../../helpers/list.helper.ts';
+import styles from './FilmsList.module.css';
+import { ColumnsType } from 'antd/es/table';
+import { FilmFormField } from '../../enums/FilmField.ts';
 
 export const FilmsList = () => {
-  const { data: fetchedFilms, isLoading, refetch } = useGetFilmsQuery({});
+  const {data: fetchedFilms, isLoading, refetch} = useGetFilmsQuery({});
   const [addFilm] = useAddFilmMutation();
 
   const [isFormOpened, setIsFormOpened] = useState(false);
@@ -45,13 +45,13 @@ export const FilmsList = () => {
   const [columns, setColumns] = useState(
     availableColumns.filter(
       (column) =>
-        [...defaultSelectedColumns, "code"].includes(column.key) ||
-        column.key === "action",
+        [...defaultSelectedColumns, 'code'].includes(column.key) ||
+        column.key === 'action',
     ),
   );
 
   const columnsOptions = [...availableColumns]
-    .filter(({ key }) => key !== "action")
+    .filter(({key}) => key !== 'action')
     .map((column) => ({
       value: column.key,
       label: column.title,
@@ -86,7 +86,7 @@ export const FilmsList = () => {
   };
 
   const modalFooterButtons = [
-    <Button key={"key"} type="primary" onClick={onSave}>
+    <Button key={'key'} type="primary" onClick={onSave}>
       Save
     </Button>,
   ];
@@ -99,10 +99,10 @@ export const FilmsList = () => {
           open={isFormOpened}
           onCancel={() => setIsFormOpened(false)}
         >
-          <FilmForm form={form} />
+          <FilmForm form={form}/>
         </Modal>
       )}
-      <Flex className="topControls" flex={1} justify={"space-between"}>
+      <Flex className="topControls" flex={1} justify={'space-between'}>
         <Form.Item label="Show columns">
           <Select
             className={styles.columnSelector}
@@ -125,7 +125,7 @@ export const FilmsList = () => {
         pagination={{
           pageSize,
           showSizeChanger: true,
-          pageSizeOptions: ["15", "20", "50"],
+          pageSizeOptions: ['15', '20', '50'],
           onShowSizeChange: (_current, size) => {
             setPageSize(size);
           },
@@ -134,9 +134,9 @@ export const FilmsList = () => {
           onClick: () => navigate(`/film/${record.code}`),
         })}
         rowClassName={(record: IFilm) => {
-          if (record.fresh === FilmFresh.Danger) return "row-error";
-          if (record.fresh === FilmFresh.Warning) return "row-warning";
-          return "";
+          if (record.fresh === FilmFresh.Danger) return 'row-error';
+          if (record.fresh === FilmFresh.Warning) return 'row-warning';
+          return '';
         }}
       />
     </>

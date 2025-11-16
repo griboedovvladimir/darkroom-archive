@@ -1,0 +1,18 @@
+.addCard {
+    height: 120px;
+    width: 120px;
+    padding: 0;
+}
+
+.printCard {
+    width: 90px;
+    height: 90px;
+    background-color: white;
+    padding: 10px;
+}
+
+.addButton {
+    div+div {
+        font-size: 50px;
+    }
+}

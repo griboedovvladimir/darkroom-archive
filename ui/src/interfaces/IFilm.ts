@@ -1,4 +1,4 @@
-import { IFrame } from "./IFrame";
+import { IFrame } from './IFrame';
 
 export interface IFilm {
   code?: number;
@@ -24,5 +24,5 @@ export interface IFilm {
   frames?: IFrame[];
   createdAt?: string;
   updatedAt?: string;
-  fresh?: "danger" | "warning";
+  fresh?: 'danger' | 'warning';
 }

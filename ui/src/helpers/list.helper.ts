@@ -1,8 +1,8 @@
-import { IFilm } from "../interfaces/IFilm";
-import { FilmStatus } from "../constants/fiimStatus";
-import dayjs from "dayjs";
-import { FilmFresh } from "../enums/FilmFresh";
-import { statusOptions } from "../constants/costants";
+import { IFilm } from '../interfaces/IFilm';
+import { FilmStatus } from '../constants/fiimStatus';
+import dayjs from 'dayjs';
+import { FilmFresh } from '../enums/FilmFresh';
+import { statusOptions } from '../constants/costants';
 
 export const isFresh = (film: IFilm) => {
   if (
@@ -11,7 +11,7 @@ export const isFresh = (film: IFilm) => {
   ) {
     return dayjs(film.useBy).isBefore(dayjs())
       ? FilmFresh.Danger
-      : dayjs(film.useBy).isBefore(dayjs().add(3, "month"))
+      : dayjs(film.useBy).isBefore(dayjs().add(3, 'month'))
         ? FilmFresh.Warning
         : undefined;
   }
@@ -19,7 +19,7 @@ export const isFresh = (film: IFilm) => {
 };
 
 const formatDate = (date: string) =>
-  date ? dayjs(date).format("MM/YYYY") : null;
+  date ? dayjs(date).format('MM/YYYY') : null;
 
 export const mapFilmFields = (film: IFilm) => {
   return {
@@ -28,7 +28,8 @@ export const mapFilmFields = (film: IFilm) => {
     developedDate: formatDate(film.developedDate),
     useBy: formatDate(film.useBy),
     status: statusOptions.find((status) => status.value === film.status)?.label,
-    fullCode: `${film.code.toString().padStart(4, "0")}${film.type === "instant" ? "I" : film.type}${film.color}${film.iso}`,
+    fullCode:
+      `${film.code?.toString().padStart(4, '0')}${film.type === 'instant' ? 'I' : film.type}${film.color}${film.iso}`,
     fresh: isFresh(film),
     frameCount: film.frames?.length,
   };

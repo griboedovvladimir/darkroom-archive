@@ -24,7 +24,7 @@ export const apiService = createApi({
                 body: patch,
             }),
         }),
-        deleteFilm: builder.mutation({
+        deleteFilm: builder.mutation({l
             query: (id) => ({
                 url: `items/${id}`,
                 method: 'DELETE',

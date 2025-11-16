@@ -1,4 +1,4 @@
-import { IPrint } from "./IPrint";
+import { IPrint } from './IPrint';
 
 export interface IFrame {
   id: string;
